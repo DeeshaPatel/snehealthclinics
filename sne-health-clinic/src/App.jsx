@@ -4,9 +4,7 @@ export default function App() {
   return (
     <div className="container">
       <div className="card">
-        <div className="logo">
-          🩺
-        </div>
+
 
         <h1>SNE Health Clinic</h1>
 
