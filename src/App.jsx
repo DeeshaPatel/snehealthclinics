@@ -4,8 +4,13 @@ export default function App() {
   return (
     <div className="container">
       <div className="card">
-
-
+        <div className="logo-wrapper">
+          <img
+            src="/sne_logo.png"
+            alt="SNE Health Clinic Logo"
+            className="logo"
+          />
+        </div>
         <h1>SNE Health Clinic</h1>
 
         <h2>Your Health. Our Priority.</h2>
