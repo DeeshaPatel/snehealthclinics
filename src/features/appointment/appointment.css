@@ -1,0 +1,119 @@
+.appointment-page{
+
+    padding-bottom:60px;
+    
+    }
+    
+    
+    
+    .appointment-header{
+    
+    background:#EAF6FF;
+    
+    padding:70px;
+    
+    text-align:center;
+    
+    }
+    
+    
+    
+    .appointment-header h1{
+    
+    font-size:45px;
+    
+    color:#0F4C81;
+    
+    }
+    
+    
+    
+    .appointment-form{
+    
+    max-width:700px;
+    
+    margin:50px auto;
+    
+    background:white;
+    
+    padding:40px;
+    
+    border-radius:15px;
+    
+    box-shadow:0 5px 20px #ddd;
+    
+    display:flex;
+    
+    flex-direction:column;
+    
+    gap:15px;
+    
+    }
+    
+    
+    
+    .appointment-form input,
+    .appointment-form select,
+    .appointment-form textarea{
+    
+    padding:14px;
+    
+    border:1px solid #ddd;
+    
+    border-radius:8px;
+    
+    font-size:16px;
+    
+    }
+    
+    
+    
+    .appointment-form textarea{
+    
+    height:120px;
+    
+    }
+    
+    
+    
+    .time-grid{
+    
+    display:grid;
+    
+    grid-template-columns:repeat(3,1fr);
+    
+    gap:10px;
+    
+    }
+    
+    
+    
+    .time-grid button{
+    
+    padding:12px;
+    
+    border-radius:8px;
+    
+    background:#EAF6FF;
+    
+    }
+    
+    
+    
+    .selected-time{
+    
+    background:#0F4C81!important;
+    
+    color:white;
+    
+    }
+    
+    
+    
+    .confirmation{
+    
+    text-align:center;
+    
+    padding:80px;
+    
+    }

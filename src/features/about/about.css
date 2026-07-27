@@ -1,0 +1,634 @@
+.about-page{
+
+    color:#1e293b;
+    
+    }
+    
+    
+    /* HERO */
+    
+    
+    .about-hero{
+    
+    padding:100px 20px;
+    
+    background:
+    linear-gradient(
+    135deg,
+    #eaf6ff,
+    #ffffff
+    );
+    
+    text-align:center;
+    
+    }
+    
+    
+    
+    .about-hero-content{
+    
+    max-width:850px;
+    
+    margin:auto;
+    
+    }
+    
+    
+    .about-hero span{
+    
+    display:inline-block;
+    
+    background:#dff2ff;
+    
+    padding:10px 20px;
+    
+    border-radius:30px;
+    
+    color:#0F4C81;
+    
+    font-weight:600;
+    
+    }
+    
+    
+    .about-hero h1{
+    
+    font-size:55px;
+    
+    line-height:1.2;
+    
+    color:#0f172a;
+    
+    margin:25px 0;
+    
+    }
+    
+    
+    .about-hero p{
+    
+    font-size:20px;
+    
+    color:#64748b;
+    
+    line-height:1.7;
+    
+    }
+    
+    
+    
+    
+    
+    /* STORY */
+    
+    
+    .about-story{
+    
+    padding:90px 8%;
+    
+    display:grid;
+    
+    grid-template-columns:1fr 1fr;
+    
+    gap:60px;
+    
+    align-items:center;
+    
+    }
+    
+    
+    .story-content h2{
+    
+    font-size:38px;
+    
+    color:#0F4C81;
+    
+    }
+    
+    
+    .story-content p{
+    
+    font-size:17px;
+    
+    line-height:1.8;
+    
+    color:#64748b;
+    
+    }
+    
+    
+    
+    .story-highlights{
+    
+    display:flex;
+    
+    gap:20px;
+    
+    margin-top:30px;
+    
+    }
+    
+    
+    .story-highlights div{
+    
+    background:#f8fafc;
+    
+    padding:20px;
+    
+    border-radius:15px;
+    
+    }
+    
+    
+    
+    
+    .story-image img{
+    
+    width:100%;
+    
+    border-radius:25px;
+    
+    }
+    
+    
+    
+    
+    /* Mission Vision */
+    
+    
+    .mission-card,
+    .vision-card{
+    
+    max-width:900px;
+    
+    margin:30px auto;
+    
+    padding:45px;
+    
+    text-align:center;
+    
+    border-radius:25px;
+    
+    background:#f8fafc;
+    
+    }
+    
+    
+    .mission-icon,
+    .vision-icon{
+    
+    font-size:40px;
+    
+    }
+    
+    
+    
+    .mission-card h2,
+    .vision-card h2{
+    
+    color:#0F4C81;
+    
+    }
+    
+    
+    
+    
+    
+    /* VALUES */
+    
+    
+    .values{
+    
+    padding:80px 8%;
+    
+    background:#ffffff;
+    
+    }
+    
+    
+    .section-heading{
+    
+    text-align:center;
+    
+    margin-bottom:50px;
+    
+    }
+    
+    
+    .values-grid{
+    
+    display:grid;
+    
+    grid-template-columns:repeat(4,1fr);
+    
+    gap:25px;
+    
+    }
+    
+    
+    .value-card{
+    
+    padding:30px;
+    
+    background:#f8fafc;
+    
+    border-radius:20px;
+    
+    text-align:center;
+    
+    transition:.3s;
+    
+    }
+    
+    
+    
+    .value-card:hover{
+    
+    transform:translateY(-8px);
+    
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.1);
+    
+    }
+    
+    
+    
+    
+    
+    /* ==========================
+   MEDICAL DIRECTOR
+========================== */
+
+
+.team{
+
+    padding:90px 8%;
+    
+    background:#f0f9ff;
+    
+    }
+    
+    
+    
+    .doctor-profile{
+    
+    
+    max-width:1000px;
+    
+    margin:auto;
+    
+    background:white;
+    
+    border-radius:30px;
+    
+    padding:50px;
+    
+    display:flex;
+    
+    gap:50px;
+    
+    align-items:center;
+    
+    box-shadow:
+    
+    0 20px 50px rgba(0,0,0,0.08);
+    
+    }
+    
+    
+    
+    
+    
+    .doctor-avatar{
+    
+    
+    width:220px;
+    
+    height:220px;
+    
+    border-radius:50%;
+    
+    background:
+    
+    linear-gradient(
+    135deg,
+    #0F4C81,
+    #38bdf8
+    );
+    
+    
+    display:flex;
+    
+    align-items:center;
+    
+    justify-content:center;
+    
+    flex-shrink:0;
+    
+    box-shadow:
+    
+    0 15px 35px rgba(15,76,129,.3);
+    
+    }
+    
+    
+    
+    .doctor-avatar span{
+    
+    
+    font-size:70px;
+    
+    font-weight:800;
+    
+    color:white;
+    
+    }
+    
+    
+    
+    
+    .doctor-info h3{
+    
+    
+    font-size:32px;
+    
+    color:#0f172a;
+    
+    margin-bottom:8px;
+    
+    }
+    
+    
+    
+    
+    .doctor-info h4{
+    
+    
+    font-size:20px;
+    
+    color:#0F4C81;
+    
+    margin-bottom:5px;
+    
+    }
+    
+    
+    
+    
+    .credentials{
+    
+    
+    font-weight:600;
+    
+    color:#0284c7;
+    
+    }
+    
+    
+    
+    
+    
+    .doctor-description{
+    
+    
+    color:#64748b;
+    
+    font-size:17px;
+    
+    line-height:1.7;
+    
+    margin:20px 0;
+    
+    }
+    
+    
+    
+    
+    
+    .specialties{
+    
+    
+    display:flex;
+    
+    gap:15px;
+    
+    flex-wrap:wrap;
+    
+    margin-bottom:25px;
+    
+    }
+    
+    
+    
+    .specialty{
+    
+    
+    display:flex;
+    
+    align-items:center;
+    
+    gap:8px;
+    
+    background:#eaf6ff;
+    
+    color:#0F4C81;
+    
+    padding:10px 15px;
+    
+    border-radius:30px;
+    
+    font-size:14px;
+    
+    font-weight:600;
+    
+    }
+    
+    
+    
+    
+    
+    .doctor-highlights{
+    
+    
+    display:flex;
+    
+    gap:25px;
+    
+    margin-bottom:30px;
+    
+    flex-wrap:wrap;
+    
+    }
+    
+    
+    
+    .doctor-highlights div{
+    
+    
+    display:flex;
+    
+    align-items:center;
+    
+    gap:8px;
+    
+    color:#475569;
+    
+    font-size:14px;
+    
+    }
+    
+    
+    
+    .doctor-highlights svg{
+    
+    color:#0284c7;
+    
+    }
+    
+    
+    
+    
+    
+    .doctor-button{
+    
+    
+    display:inline-block;
+    
+    background:#0F4C81;
+    
+    color:white;
+    
+    padding:15px 35px;
+    
+    border-radius:12px;
+    
+    font-weight:600;
+    
+    transition:.3s;
+    
+    }
+    
+    
+    
+    .doctor-button:hover{
+    
+    
+    background:#08365d;
+    
+    transform:translateY(-3px);
+    
+    }
+    
+    
+    
+    
+    
+    
+    @media(max-width:768px){
+    
+    
+    .doctor-profile{
+    
+    flex-direction:column;
+    
+    text-align:center;
+    
+    padding:35px;
+    
+    }
+    
+    
+    
+    .doctor-avatar{
+    
+    width:160px;
+    
+    height:160px;
+    
+    }
+    
+    
+    
+    .doctor-avatar span{
+    
+    font-size:50px;
+    
+    }
+    
+    
+    
+    .doctor-info h3{
+    
+    font-size:25px;
+    
+    }
+    
+    
+    
+    .doctor-highlights{
+    
+    justify-content:center;
+    
+    }
+    
+    
+    
+    .specialties{
+    
+    justify-content:center;
+    
+    }
+    
+    
+    }
+    
+    
+    
+    
+    /* MOBILE */
+    
+    
+    @media(max-width:900px){
+    
+    
+    .about-story{
+    
+    grid-template-columns:1fr;
+    
+    }
+    
+    
+    
+    .about-hero h1{
+    
+    font-size:38px;
+    
+    }
+    
+    
+    
+    .values-grid{
+    
+    grid-template-columns:1fr;
+    
+    }
+    
+    
+    
+    .team-single-card{
+    
+    flex-direction:column;
+    
+    text-align:center;
+    
+    }
+    
+    
+    
+    .story-highlights{
+    
+    flex-direction:column;
+    
+    }
+    
+    
+    }

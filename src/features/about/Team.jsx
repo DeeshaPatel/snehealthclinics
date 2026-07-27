@@ -1,0 +1,205 @@
+import { Link } from "react-router-dom";
+import {
+    Stethoscope,
+    HeartPulse,
+    ShieldCheck,
+    CalendarCheck
+} from "lucide-react";
+
+
+const team = {
+
+    name:"Dr. Airhumwunde, Osamagbe Walter",
+
+    role:"Medical Director",
+
+    credentials:
+    "Family Physician",
+
+    description:
+    "Dr. Osamagbe Walter Airhumwunde leads SNE Health Clinic with a commitment to providing compassionate, accessible, and patient-centered healthcare for individuals and families.",
+
+
+    specialties:[
+        "Family Medicine",
+        "Preventive Care",
+        "Walk-in Clinic Services"
+    ]
+
+};
+
+
+
+export default function Team(){
+
+
+return (
+
+<section className="team">
+
+
+<div className="section-heading">
+
+
+<h2>
+Meet Our Medical Director
+</h2>
+
+
+<p>
+Experienced healthcare leadership dedicated to your wellness.
+</p>
+
+
+</div>
+
+
+
+
+<div className="doctor-profile">
+
+
+
+{/* Avatar */}
+
+<div className="doctor-avatar">
+
+<span>
+Dr
+</span>
+
+</div>
+
+
+
+
+<div className="doctor-info">
+
+
+<h3>
+{team.name}
+</h3>
+
+
+<h4>
+{team.role}
+</h4>
+
+
+<p className="credentials">
+
+{team.credentials}
+
+</p>
+
+
+
+<p className="doctor-description">
+
+{team.description}
+
+</p>
+
+
+
+
+
+<div className="specialties">
+
+
+{
+team.specialties.map((item)=>(
+
+<div
+key={item}
+className="specialty"
+>
+
+<Stethoscope size={18}/>
+
+{item}
+
+</div>
+
+))
+
+}
+
+
+</div>
+
+
+
+
+
+<div className="doctor-highlights">
+
+
+<div>
+
+<HeartPulse/>
+
+<span>
+Patient-Centered Care
+</span>
+
+</div>
+
+
+
+<div>
+
+<ShieldCheck/>
+
+<span>
+Trusted Healthcare
+</span>
+
+</div>
+
+
+
+<div>
+
+<CalendarCheck/>
+
+<span>
+Accepting Patients
+</span>
+
+</div>
+
+
+</div>
+
+
+
+
+
+<Link
+
+to="/book-appointment"
+
+className="doctor-button"
+
+>
+
+Book Appointment
+
+</Link>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</section>
+
+)
+
+}

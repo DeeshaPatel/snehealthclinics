@@ -1,0 +1,107 @@
+.services-page{
+
+    padding-bottom:60px;
+    
+    }
+    
+    
+    
+    .services-hero{
+    
+    background:#EAF6FF;
+    
+    padding:80px;
+    
+    text-align:center;
+    
+    }
+    
+    
+    
+    .services-hero h1{
+    
+    font-size:48px;
+    
+    color:#0F4C81;
+    
+    }
+    
+    
+    
+    .services-container{
+    
+    padding:60px;
+    
+    }
+    
+    
+    
+    .services-grid{
+    
+    display:grid;
+    
+    grid-template-columns:repeat(3,1fr);
+    
+    gap:30px;
+    
+    }
+    
+    
+    
+    .service-card{
+    
+    text-align:center;
+    
+    }
+    
+    
+    
+    .service-icon{
+    
+    font-size:45px;
+    
+    margin-bottom:20px;
+    
+    }
+    
+    
+    
+    .service-card h3{
+    
+    color:#0F4C81;
+    
+    margin-bottom:15px;
+    
+    }
+    
+    
+    
+    .service-details{
+    
+    margin:40px auto;
+    
+    max-width:700px;
+    
+    }
+    
+    
+    
+    .service-details li{
+    
+    margin:10px;
+    
+    }
+    
+    
+    
+    .services-cta{
+    
+    background:#0F4C81;
+    
+    color:white;
+    
+    padding:60px;
+    
+    text-align:center;
+    
+    }

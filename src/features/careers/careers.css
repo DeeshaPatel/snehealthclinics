@@ -1,0 +1,231 @@
+.careers-page{
+
+    padding:80px 8%;
+    
+    background:#f8fafc;
+    
+    }
+    
+    
+    
+    /* Hero */
+    
+    
+    .careers-hero{
+    
+    text-align:center;
+    
+    max-width:800px;
+    
+    margin:auto;
+    
+    }
+    
+    
+    
+    .careers-hero h1{
+    
+    font-size:48px;
+    
+    color:#0F4C81;
+    
+    margin-bottom:20px;
+    
+    }
+    
+    
+    
+    .careers-hero p{
+    
+    font-size:18px;
+    
+    line-height:1.7;
+    
+    color:#64748b;
+    
+    }
+    
+    
+    
+    
+    
+    /* Cards */
+    
+    
+    .careers-content{
+    
+    display:grid;
+    
+    grid-template-columns:repeat(2,1fr);
+    
+    gap:30px;
+    
+    margin-top:60px;
+    
+    }
+    
+    
+    
+    .career-card{
+    
+    background:white;
+    
+    padding:35px;
+    
+    border-radius:20px;
+    
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.08);
+    
+    }
+    
+    
+    
+    .career-card svg{
+    
+    color:#0F4C81;
+    
+    margin-bottom:20px;
+    
+    }
+    
+    
+    
+    .career-card h2{
+    
+    color:#0F4C81;
+    
+    margin-bottom:15px;
+    
+    }
+    
+    
+    
+    .career-card p,
+    .career-card li{
+    
+    color:#64748b;
+    
+    line-height:1.7;
+    
+    }
+    
+    
+    
+    .career-card ul{
+    
+    padding-left:20px;
+    
+    }
+    
+    
+    
+    
+    
+    /* Contact */
+    
+    
+    .career-contact{
+    
+    margin-top:50px;
+    
+    background:white;
+    
+    padding:35px;
+    
+    border-radius:20px;
+    
+    display:flex;
+    
+    align-items:center;
+    
+    gap:25px;
+    
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.08);
+    
+    }
+    
+    
+    
+    .career-contact svg{
+    
+    color:#0F4C81;
+    
+    }
+    
+    
+    
+    .career-contact h3{
+    
+    color:#0F4C81;
+    
+    }
+    
+    
+    
+    .career-contact p{
+    
+    color:#64748b;
+    
+    line-height:1.6;
+    
+    }
+    
+    
+    
+    .career-contact a{
+    
+    display:flex;
+    
+    align-items:center;
+    
+    gap:8px;
+    
+    color:#0F4C81;
+    
+    font-weight:600;
+    
+    }
+    
+    
+    
+    
+    
+    @media(max-width:768px){
+    
+    
+    .careers-page{
+    
+    padding:60px 20px;
+    
+    }
+    
+    
+    
+    .careers-hero h1{
+    
+    font-size:34px;
+    
+    }
+    
+    
+    
+    .careers-content{
+    
+    grid-template-columns:1fr;
+    
+    }
+    
+    
+    
+    .career-contact{
+    
+    flex-direction:column;
+    
+    text-align:center;
+    
+    }
+    
+    
+    }

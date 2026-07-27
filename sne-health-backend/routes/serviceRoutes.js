@@ -1,0 +1,25 @@
+import express from "express";
+
+import pool from "../config/database.js";
+
+
+const router=express.Router();
+
+
+
+router.get("/",async(req,res)=>{
+
+
+const result =
+await pool.query(
+"SELECT * FROM services"
+);
+
+
+res.json(result.rows);
+
+
+});
+
+
+export default router;
