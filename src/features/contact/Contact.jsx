@@ -120,7 +120,7 @@ Email
 </h4>
 
 <p>
-info@snehealth.com
+info@snehealthclinics.ca
 </p>
 
 </div>

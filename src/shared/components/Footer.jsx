@@ -83,7 +83,7 @@ Contact
 
 
 <p>
-✉ Email: info@snehealth.com
+✉ Email: info@snehealthclinics.ca
 </p>
 
 </div>

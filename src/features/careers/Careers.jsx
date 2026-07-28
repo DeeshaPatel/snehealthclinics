@@ -131,7 +131,7 @@ or send us their information for future consideration.
 
 <Mail size={18}/>
 
-contact@snehealth.com
+contact@snehealthclinics.ca
 
 </a>
 
