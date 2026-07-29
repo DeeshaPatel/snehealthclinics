@@ -23,7 +23,7 @@ return (
 <WhyChooseUs />
 
 
-<Testimonials />
+{/* <Testimonials /> */}
 
 
 <CTASection />
