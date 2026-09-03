@@ -16,37 +16,35 @@ import patientRoutes from "./routes/patientRoutes.js";
 import usersRoutes from "./routes/usersRoutes.js";
 import appointmentTypesRouter from "./routes/appointmentTypes.js";
 
-
 // ===============================
 // EXPRESS APP
 // ===============================
 
 const app = express();
 
-/* ========================================================= 
-CLOUDFLARE ENVIRONMENT 
-========================================================= 
-Make Hyperdrive's env available to db.js before 
-any database route executes.
-========================================================= */ 
-app.use((req, res, next) => { 
-    if (globalThis.__CF_ENV__) { 
-        setDatabaseEnv(globalThis.__CF_ENV__); 
-    } 
-    next(); 
+// ===============================
+// CLOUDFLARE ENVIRONMENT
+// ===============================
+//
+// Make Hyperdrive / Cloudflare environment
+// available to db.js before database routes execute.
+//
+
+app.use((req, res, next) => {
+    if (globalThis.__CF_ENV__) {
+        setDatabaseEnv(globalThis.__CF_ENV__);
+    }
+
+    next();
 });
-
-
-// ===============================
-// MIDDLEWARE
-// ===============================
-
-app.use(express.json());
-
 
 // ===============================
 // CORS
 // ===============================
+//
+// IMPORTANT:
+// This middleware must run BEFORE all API routes.
+//
 
 app.use((req, res, next) => {
 
@@ -61,20 +59,51 @@ app.use((req, res, next) => {
 
     const origin = req.headers.origin;
 
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader("Access-Control-Allow-Origin", origin);
-        res.setHeader("Access-Control-Allow-Credentials", "true");
+    // --------------------------------
+    // Allow matching frontend origins
+    // --------------------------------
+
+    if (origin && allowedOrigins.includes(origin)) {
+
+        res.setHeader(
+            "Access-Control-Allow-Origin",
+            origin
+        );
+
+        res.setHeader(
+            "Access-Control-Allow-Credentials",
+            "true"
+        );
+
+        // Required when Access-Control-Allow-Origin
+        // changes depending on the request origin.
+        res.setHeader(
+            "Vary",
+            "Origin"
+        );
     }
+
+    // --------------------------------
+    // Allowed HTTP methods
+    // --------------------------------
 
     res.setHeader(
         "Access-Control-Allow-Methods",
         "GET,POST,PUT,PATCH,DELETE,OPTIONS"
     );
 
+    // --------------------------------
+    // Allowed request headers
+    // --------------------------------
+
     res.setHeader(
         "Access-Control-Allow-Headers",
         "Content-Type, Authorization"
     );
+
+    // --------------------------------
+    // Handle preflight requests
+    // --------------------------------
 
     if (req.method === "OPTIONS") {
         return res.sendStatus(204);
@@ -83,6 +112,11 @@ app.use((req, res, next) => {
     next();
 });
 
+// ===============================
+// JSON BODY PARSER
+// ===============================
+
+app.use(express.json());
 
 // ===============================
 // HEALTH CHECK
@@ -91,6 +125,7 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
 
     res.json({
+        success: true,
         message: "SNE Health API Running"
     });
 
@@ -105,56 +140,63 @@ app.get("/api/health", (req, res) => {
 
 });
 
-
 // ===============================
-// ROUTES
+// API ROUTES
 // ===============================
 
+// Dashboard
 app.use(
     "/api/dashboard",
     dashboardRoutes
 );
 
+// Appointment Settings
 app.use(
     "/api/settings/appointments",
     appointmentSettingsRoutes
 );
 
+// Appointment Types
 app.use(
     "/api/appointment-types",
     appointmentTypesRouter
 );
 
+// Authentication
 app.use(
     "/api/auth",
     authRoutes
 );
 
+// Appointments
 app.use(
     "/api/appointments",
     appointmentRoutes
 );
 
+// Patients
 app.use(
     "/api/patients",
     patientRoutes
 );
 
+// Providers
 app.use(
     "/api/providers",
     providerRoutes
 );
 
+// Services
 app.use(
     "/api/services",
     serviceRoutes
 );
 
+// Users
 app.use(
     "/api/users",
     usersRoutes
 );
-
 
 // ===============================
 // 404 HANDLER
@@ -170,36 +212,55 @@ app.use((req, res) => {
 
 });
 
-
 // ===============================
-// CLOUDFLARE WORKER
+// START EXPRESS SERVER
 // ===============================
+//
+// Cloudflare's Node compatibility layer
+// exposes the Express server through port 3000.
+//
 
 app.listen(3000);
+
+// ===============================
+// CLOUDFLARE HTTP SERVER HANDLER
+// ===============================
 
 const handler = httpServerHandler({
     port: 3000
 });
 
+// ===============================
+// CLOUDFLARE WORKER
+// ===============================
+
 export default {
 
     async fetch(request, env, ctx) {
 
-        /*
-        ================================================
-        Make Cloudflare environment available to db.js
-        ================================================
-        */
+        // --------------------------------
+        // Make Cloudflare environment
+        // available to db.js
+        // --------------------------------
 
         setDatabaseEnv(env);
 
-        /*
-        ================================================
-        Pass request to Express
-        ================================================
-        */
+        // --------------------------------
+        // Make environment available to
+        // the Express middleware as well
+        // --------------------------------
 
-        return handler.fetch(request, env, ctx);
+        globalThis.__CF_ENV__ = env;
+
+        // --------------------------------
+        // Pass request to Express
+        // --------------------------------
+
+        return handler.fetch(
+            request,
+            env,
+            ctx
+        );
 
     }
 
