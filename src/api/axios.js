@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API = axios.create({
 
-baseURL:"/internal/api",
+baseURL:"https://api.backend.snehealth.ca/api",
 
 headers:{
 
