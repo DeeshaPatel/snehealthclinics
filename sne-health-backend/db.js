@@ -1,28 +1,36 @@
-import pg from "pg";
-import dotenv from "dotenv";
+import { Client } from "pg";
 
-dotenv.config();
+/**
+ * Execute a PostgreSQL query through Cloudflare Hyperdrive.
+ *
+ * @param {object} env - Cloudflare Worker environment
+ * @param {string} text - SQL query
+ * @param {Array} params - Query parameters
+ * @returns {Promise<object>} PostgreSQL query result
+ */
+export async function query(env, text, params = []) {
 
-const { Pool } = pg;
+    const client = new Client({
+        connectionString: env.HYPERDRIVE.connectionString
+    });
 
-const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+    try {
 
-    ssl: {
-        rejectUnauthorized: false
+        await client.connect();
+
+        const result = await client.query(text, params);
+
+        return result;
+
+    } catch (error) {
+
+        console.error("PostgreSQL error:", error);
+
+        throw error;
+
+    } finally {
+
+        await client.end();
+
     }
-});
-
-pool.on("connect", () => {
-    console.log("Connected to PostgreSQL");
-});
-
-pool.on("error", (err) => {
-    console.error("Unexpected PostgreSQL error:", err);
-});
-
-export default pool;
+}
