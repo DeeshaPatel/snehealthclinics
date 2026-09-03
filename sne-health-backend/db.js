@@ -7,15 +7,15 @@ const { Pool } = pg;
 
 const pool = new Pool({
 
-    user: env.DB_USER,
+    user: process.env.DB_USER,
 
-    host: env.DB_HOST,
+    host: process.env.DB_HOST,
 
-    database: env.DB_NAME,
+    database: process.env.DB_NAME,
 
-    password: env.DB_PASSWORD,
+    password: process.env.DB_PASSWORD,
 
-    port: env.DB_PORT,
+    port: process.env.DB_PORT,
 
     ssl: {
         rejectUnauthorized: false
