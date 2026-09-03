@@ -347,9 +347,9 @@
     }
   });
 
-  // .wrangler/tmp/bundle-ZMKaSX/middleware-insertion-facade.js
+  // .wrangler/tmp/bundle-2GNuDD/middleware-insertion-facade.js
   var init_middleware_insertion_facade = __esm({
-    ".wrangler/tmp/bundle-ZMKaSX/middleware-insertion-facade.js"() {
+    ".wrangler/tmp/bundle-2GNuDD/middleware-insertion-facade.js"() {
       init_loader_sw();
       init_middleware_ensure_req_body_drained();
       init_middleware_miniflare3_json_error();
@@ -47832,7 +47832,7 @@ See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode de
     }
   });
 
-  // sne-health-backend/server.js
+  // sne-health-backend/worker.js
   init_middleware_insertion_facade();
   init_modules_watch_stub();
   var import_express10 = __toESM(require_express2(), 1);
@@ -51687,7 +51687,7 @@ See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode de
   });
   var appointmentTypes_default = router9;
 
-  // sne-health-backend/server.js
+  // sne-health-backend/worker.js
   import_dotenv3.default.config();
   var app = (0, import_express10.default)();
   app.use(
@@ -52040,4 +52040,4 @@ object-assign/index.js:
 safe-buffer/index.js:
   (*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> *)
 */
-//# sourceMappingURL=server.js.map
+//# sourceMappingURL=worker.js.map

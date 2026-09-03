@@ -3,7 +3,7 @@
 
   "name": "snehealthclinics",
 
-  "main": "./sne-health-backend/server.js",
+  "main": "./sne-health-backend/worker.js",
 
   "compatibility_date": "2026-06-09",
 
