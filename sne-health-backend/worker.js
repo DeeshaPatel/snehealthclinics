@@ -2,54 +2,57 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
+import { httpServerHandler } from "cloudflare:node";
 
-import appointmentRoutes 
-from "./routes/appointmentRoutes.js";
-
-
-import providerRoutes 
-from "./routes/providerRoutes.js";
-
-
-import serviceRoutes 
-from "./routes/serviceRoutes.js";
-
-import dashboardRoutes 
-from "./routes/dashboard.js"
-
-import authRoutes 
-from "./routes/authRoutes.js";
-
-import appointmentSettingsRoutes
-from "./routes/appointmentSettings.js";
-
+import appointmentRoutes from "./routes/appointmentRoutes.js";
+import providerRoutes from "./routes/providerRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js";
+import dashboardRoutes from "./routes/dashboard.js";
+import authRoutes from "./routes/authRoutes.js";
+import appointmentSettingsRoutes from "./routes/appointmentSettings.js";
 import patientRoutes from "./routes/patientRoutes.js";
-
 import usersRoutes from "./routes/usersRoutes.js";
-
-import appointmentTypesRouter
-    from "./routes/appointmentTypes.js";
-
+import appointmentTypesRouter from "./routes/appointmentTypes.js";
 
 dotenv.config();
 
-
 const app = express();
 
-
+/*
+=========================================================
+CORS
+=========================================================
+*/
 
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL,
+        origin: [
+            "https://snehealth.ca",
+            "https://www.snehealth.ca",
+            "http://localhost:5173"
+        ],
         credentials: true
     })
 );
 
+/*
+=========================================================
+MIDDLEWARE
+=========================================================
+*/
+
 app.use(express.json());
 
+/*
+=========================================================
+ROUTES
+=========================================================
+*/
+
 app.use(
-    "/api/dashboard", dashboardRoutes
-)
+    "/api/dashboard",
+    dashboardRoutes
+);
 
 app.use(
     "/api/settings/appointments",
@@ -81,7 +84,6 @@ app.use(
     providerRoutes
 );
 
-
 app.use(
     "/api/services",
     serviceRoutes
@@ -92,30 +94,25 @@ app.use(
     usersRoutes
 );
 
+/*
+=========================================================
+HEALTH CHECK
+=========================================================
+*/
 
-
-app.get("/",(req,res)=>{
-
-res.json({
-
-message:"SNE Health API Running"
-
+app.get("/", (req, res) => {
+    res.json({
+        message: "SNE Health API Running"
+    });
 });
 
-});
+/*
+=========================================================
+CLOUDFLARE WORKER
+=========================================================
+*/
 
-
-
-
-const PORT =
-process.env.PORT || 5000;
-
-
-
-app.listen(PORT,()=>{
-
-console.log(
-`Server running on port ${PORT}`
-);
-
+export default httpServerHandler({
+    port: 8080,
+    fetch: app.fetch
 });
