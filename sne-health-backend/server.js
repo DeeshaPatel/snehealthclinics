@@ -38,7 +38,12 @@ const app = express();
 
 
 
-app.use(cors());
+app.use(
+    cors({
+        origin: env.FRONTEND_URL,
+        credentials: true
+    })
+);
 
 app.use(express.json());
 
@@ -103,7 +108,7 @@ message:"SNE Health API Running"
 
 
 const PORT =
-process.env.PORT || 5000;
+env.PORT || 5000;
 
 
 
