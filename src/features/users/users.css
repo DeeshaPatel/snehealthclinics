@@ -1,0 +1,1100 @@
+/* =========================================================
+   USERS PAGE
+========================================================= */
+
+.users-page {
+    width: 100%;
+    min-height: 100%;
+    padding: 28px 32px 40px;
+    box-sizing: border-box;
+    background: #f7f9fc;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.users-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 26px;
+}
+
+.users-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.users-title-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #eaf3f4;
+    color: #167477;
+}
+
+.users-title h1 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 25px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+}
+
+.users-title p {
+    margin: 4px 0 0;
+
+    color: #718096;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   HEADER BUTTONS
+========================================================= */
+
+.users-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.users-refresh-btn,
+.users-add-btn {
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 0 15px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+}
+
+.users-refresh-btn {
+    border: 1px solid #dbe3eb;
+
+    background: #ffffff;
+
+    color: #475569;
+}
+
+.users-refresh-btn:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+}
+
+.users-refresh-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.users-add-btn {
+    border: 1px solid #167477;
+
+    background: #167477;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 3px 8px rgba(22, 116, 119, 0.15);
+}
+
+.users-add-btn:hover {
+    background: #126366;
+
+    border-color: #126366;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(22, 116, 119, 0.2);
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.users-toolbar {
+    min-height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 10px 14px;
+
+    margin-bottom: 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 10px;
+
+    box-sizing: border-box;
+}
+
+.users-search {
+    width: min(480px, 100%);
+
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 0 12px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    color: #94a3b8;
+
+    box-sizing: border-box;
+}
+
+.users-search:focus-within {
+    border-color: #167477;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 3px rgba(22, 116, 119, 0.08);
+}
+
+.users-search input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #334155;
+
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.users-search input::placeholder {
+    color: #9aa7b6;
+}
+
+.users-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    padding-right: 5px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+}
+
+.users-count strong {
+    color: #172033;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.users-error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 12px 14px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 8px;
+
+    background: #fff7f7;
+
+    color: #b91c1c;
+
+    font-size: 12px;
+}
+
+.users-error button {
+    border: none;
+
+    background: transparent;
+
+    color: #991b1b;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   USERS LIST
+========================================================= */
+
+.users-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   USER ROW
+========================================================= */
+
+.user-row {
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    padding: 14px 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 10px;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+}
+
+.user-row:hover {
+    border-color: #d4dce5;
+
+    box-shadow:
+        0 4px 14px rgba(15, 23, 42, 0.05);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   USER MAIN
+========================================================= */
+
+.user-main {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+}
+
+.user-avatar {
+    width: 43px;
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eaf3f4;
+
+    color: #167477;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    letter-spacing: 0.3px;
+}
+
+.user-name {
+    min-width: 0;
+}
+
+.user-name h2 {
+    margin: 0 0 5px;
+
+    color: #172033;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-name > div {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    color: #7b8798;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-name svg {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   USER RIGHT
+========================================================= */
+
+.user-right {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   ROLE BADGE
+========================================================= */
+
+.role-badge {
+    min-width: 105px;
+
+    height: 28px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 0 10px;
+
+    border-radius: 6px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    box-sizing: border-box;
+}
+
+.role-badge.admin {
+    background: #f0eafe;
+
+    color: #6d45b8;
+}
+
+.role-badge.receptionist {
+    background: #edf7f2;
+
+    color: #2d8060;
+}
+
+
+/* =========================================================
+   USER DATE
+========================================================= */
+
+.user-date {
+    width: 85px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+
+.delete-user-btn {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: 1px solid transparent;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.delete-user-btn:hover {
+    background: #fef2f2;
+
+    border-color: #fecaca;
+
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.users-loading {
+    min-height: 280px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    color: #718096;
+}
+
+.users-loading p {
+    margin: 0;
+
+    font-size: 12px;
+}
+
+.user-spinner {
+    width: 28px;
+    height: 28px;
+
+    border: 3px solid #e2e8f0;
+
+    border-top-color: #167477;
+
+    border-radius: 50%;
+
+    animation: user-spin 0.8s linear infinite;
+}
+
+@keyframes user-spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.users-list:empty::before {
+    content: "No users found.";
+
+    min-height: 220px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 10px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   ADD USER MODAL OVERLAY
+========================================================= */
+
+.user-modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.48);
+
+    backdrop-filter: blur(4px);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   ADD USER MODAL
+========================================================= */
+
+.user-modal {
+    width: 100%;
+
+    max-width: 520px;
+
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 25px 70px rgba(15, 23, 42, 0.2);
+
+    animation:
+        user-modal-in 0.2s ease-out;
+}
+
+@keyframes user-modal-in {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(10px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.user-modal-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 22px 24px;
+
+    border-bottom: 1px solid #edf0f4;
+}
+
+.user-modal-header h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.user-modal-header p {
+    margin: 5px 0 0;
+
+    color: #7b8798;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.user-modal-close {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.user-modal-close:hover {
+    background: #f1f5f9;
+
+    color: #334155;
+}
+
+
+/* =========================================================
+   MODAL BODY
+========================================================= */
+
+.user-modal-body {
+    display: flex;
+    flex-direction: column;
+
+    gap: 17px;
+
+    padding: 22px 24px;
+}
+
+.user-form-row {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+.user-form-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.user-form-group label {
+    color: #475569;
+
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.user-form-group input,
+.user-form-group select {
+    width: 100%;
+    height: 40px;
+
+    padding: 0 11px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #dce3ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #334155;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.user-form-group input::placeholder {
+    color: #a3afbd;
+}
+
+.user-form-group input:focus,
+.user-form-group select:focus {
+    border-color: #167477;
+
+    box-shadow:
+        0 0 0 3px rgba(22, 116, 119, 0.08);
+}
+
+.user-form-group select {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   FORM ERROR
+========================================================= */
+
+.user-form-error {
+    padding: 10px 12px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 7px;
+
+    background: #fff7f7;
+
+    color: #b91c1c;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+========================================================= */
+
+.user-modal-footer {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 9px;
+
+    padding: 16px 24px;
+
+    border-top: 1px solid #edf0f4;
+
+    background: #fafbfc;
+
+    border-radius:
+        0 0 14px 14px;
+}
+
+.user-cancel-btn,
+.user-save-btn {
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 0 15px;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+
+    font-size: 11px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.user-cancel-btn {
+    border: 1px solid #dbe2ea;
+
+    background: #ffffff;
+
+    color: #475569;
+}
+
+.user-cancel-btn:hover:not(:disabled) {
+    background: #f8fafc;
+}
+
+.user-save-btn {
+    border: 1px solid #167477;
+
+    background: #167477;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 3px 8px rgba(22, 116, 119, 0.14);
+}
+
+.user-save-btn:hover:not(:disabled) {
+    background: #126366;
+
+    border-color: #126366;
+}
+
+.user-cancel-btn:disabled,
+.user-save-btn:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SPIN
+========================================================= */
+
+.spin {
+    animation:
+        spin-animation 0.8s linear infinite;
+}
+
+@keyframes spin-animation {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .users-page {
+        padding: 22px 20px 32px;
+    }
+
+    .user-row {
+        align-items: flex-start;
+    }
+
+    .user-right {
+        gap: 10px;
+    }
+
+    .user-date {
+        display: none;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .users-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .users-header-actions {
+        width: 100%;
+    }
+
+    .users-refresh-btn,
+    .users-add-btn {
+        flex: 1;
+    }
+
+    .users-toolbar {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        padding: 12px;
+    }
+
+    .users-search {
+        width: 100%;
+    }
+
+    .users-count {
+        padding-left: 2px;
+    }
+
+    .user-row {
+        flex-direction: column;
+
+        gap: 13px;
+    }
+
+    .user-main {
+        width: 100%;
+    }
+
+    .user-right {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    .users-page {
+        padding: 18px 14px 28px;
+    }
+
+    .users-title h1 {
+        font-size: 22px;
+    }
+
+    .users-title p {
+        font-size: 11px;
+    }
+
+    .user-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .user-modal-header,
+    .user-modal-body,
+    .user-modal-footer {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+}
+
+/* =========================================================
+   USER ACTIONS
+========================================================= */
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+/* =========================================================
+   EDIT USER BUTTON
+========================================================= */
+
+.edit-user-btn,
+.delete-user-btn {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: 1px solid transparent;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.edit-user-btn {
+    color: #64748b;
+}
+
+.edit-user-btn:hover {
+    background: #f0fdfa;
+
+    border-color: #b8e4df;
+
+    color: #167477;
+}
+
+
+/* =========================================================
+   DELETE USER BUTTON
+========================================================= */
+
+.delete-user-btn {
+    color: #94a3b8;
+}
+
+.delete-user-btn:hover {
+    background: #fef2f2;
+
+    border-color: #fecaca;
+
+    color: #dc2626;
+}

@@ -20,8 +20,11 @@ import Dashboard from "../features/dashboard/Dashboard";
 import Patients from "../features/patients/Patients";
 import Appointments from "../features/dashboard_appointments/Appointment";
 import Providers from "../features/providers/Providers";
-import Reports from "../features/reports/Reports";
+import Users from "../features/users/Users";
 import Settings from "../features/settings/Settings";
+
+import ForgotPassword from "../features/auth/ForgotPassword";
+import ResetPassword from "../features/auth/ResetPassword";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -42,6 +45,16 @@ export default function AppRoutes() {
       {/* Login */}
       <Route path="/login" element={<Login />} />
 
+      <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+      />
+
+      <Route
+          path="/reset-password/:token"
+          element={<ResetPassword />}
+      />
+
       {/* Protected Dashboard */}
       <Route
         element={
@@ -54,7 +67,7 @@ export default function AppRoutes() {
         <Route path="/patients" element={<Patients />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/providers" element={<Providers />} />
-        <Route path="/reports" element={<Reports />} />
+        <Route path="/users" element={<Users />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
 

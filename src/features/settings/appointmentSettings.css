@@ -1,0 +1,802 @@
+/* =========================================================
+   APPOINTMENT SETTINGS PAGE
+========================================================= */
+
+.appointment-settings-page {
+    width: 100%;
+    min-height: 100%;
+    padding: 30px;
+    background: #f6f8fb;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.appointment-settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 26px;
+}
+
+.settings-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.settings-title-icon {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #e8f3f1;
+    color: #187c72;
+    flex-shrink: 0;
+}
+
+.settings-title-row h1 {
+    margin: 0 0 5px;
+    font-size: 25px;
+    font-weight: 700;
+    color: #17212b;
+    letter-spacing: -0.3px;
+}
+
+.settings-title-row p {
+    margin: 0;
+    color: #6c7783;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   HEADER BUTTONS
+========================================================= */
+
+.settings-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.settings-refresh-button,
+.settings-save-button {
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.settings-refresh-button {
+    background: #ffffff;
+    border: 1px solid #dce2e8;
+    color: #46515d;
+}
+
+.settings-refresh-button:hover:not(:disabled) {
+    background: #f3f6f8;
+    border-color: #cbd3da;
+}
+
+.settings-save-button {
+    background: #187c72;
+    border: 1px solid #187c72;
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(24, 124, 114, 0.18);
+}
+
+.settings-save-button:hover:not(:disabled) {
+    background: #126b62;
+    border-color: #126b62;
+    transform: translateY(-1px);
+}
+
+.settings-refresh-button:disabled,
+.settings-save-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MESSAGES
+========================================================= */
+
+.settings-success,
+.settings-error {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 15px;
+    margin-bottom: 20px;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+.settings-success {
+    background: #ecf9f3;
+    border: 1px solid #c8ead9;
+    color: #176b4b;
+}
+
+.settings-error {
+    background: #fff2f2;
+    border: 1px solid #f0cccc;
+    color: #a22d2d;
+}
+
+.settings-success span,
+.settings-error span {
+    flex: 1;
+}
+
+.settings-success button,
+.settings-error button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.appointment-settings-content {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+/* =========================================================
+   SETTINGS CARD
+========================================================= */
+
+.settings-card {
+    background: #ffffff;
+    border: 1px solid #e3e8ed;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 3px 12px rgba(25, 40, 55, 0.04);
+}
+
+.settings-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #edf0f3;
+    margin-bottom: 22px;
+}
+
+.settings-card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #eef7f6;
+    color: #187c72;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.settings-card-header h2 {
+    margin: 0 0 4px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #202b35;
+}
+
+.settings-card-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #77818c;
+}
+
+
+/* =========================================================
+   GENERAL SETTINGS
+========================================================= */
+
+.settings-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.settings-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-field label {
+    margin-bottom: 8px;
+    color: #303b45;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.settings-field select,
+.settings-field input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #d8dee4;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #27313a;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+    transition: 0.2s ease;
+}
+
+.settings-field select:focus,
+.settings-field input:focus {
+    border-color: #4b9e95;
+    box-shadow: 0 0 0 3px rgba(75, 158, 149, 0.1);
+}
+
+.field-help {
+    margin-top: 7px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #89929b;
+}
+
+
+/* =========================================================
+   TOGGLE SETTINGS
+========================================================= */
+
+.settings-toggle-list {
+    margin-top: 25px;
+    border-top: 1px solid #edf0f3;
+}
+
+.settings-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid #edf0f3;
+}
+
+.settings-toggle-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.settings-toggle-row strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: #303b45;
+}
+
+.settings-toggle-row p {
+    margin: 0;
+    max-width: 700px;
+    color: #818b95;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   TOGGLE SWITCH
+========================================================= */
+
+.settings-switch {
+    position: relative;
+    display: inline-flex;
+    width: 46px;
+    height: 25px;
+    flex-shrink: 0;
+}
+
+.settings-switch.small {
+    width: 40px;
+    height: 22px;
+}
+
+.settings-switch input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.settings-switch span {
+    position: absolute;
+    inset: 0;
+    border-radius: 50px;
+    background: #cdd4da;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.settings-switch span::before {
+    content: "";
+    position: absolute;
+    width: 19px;
+    height: 19px;
+    left: 3px;
+    top: 3px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+    transition: 0.2s ease;
+}
+
+.settings-switch.small span::before {
+    width: 16px;
+    height: 16px;
+}
+
+.settings-switch input:checked + span {
+    background: #187c72;
+}
+
+.settings-switch input:checked + span::before {
+    transform: translateX(21px);
+}
+
+.settings-switch.small input:checked + span::before {
+    transform: translateX(18px);
+}
+
+
+/* =========================================================
+   BUSINESS HOURS
+========================================================= */
+
+.business-hours-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.business-hours-row {
+    display: grid;
+    grid-template-columns: 210px 1fr 80px;
+    align-items: center;
+    gap: 20px;
+    min-height: 68px;
+    border-bottom: 1px solid #edf0f3;
+}
+
+.business-hours-row:last-child {
+    border-bottom: none;
+}
+
+.business-day {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.business-day strong {
+    font-size: 14px;
+    color: #303b45;
+}
+
+.business-time-fields {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.business-time-fields input {
+    width: 125px;
+    height: 39px;
+    padding: 0 10px;
+    border: 1px solid #d8dee4;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #303b45;
+    font-size: 13px;
+    outline: none;
+}
+
+.business-time-fields input:focus {
+    border-color: #4b9e95;
+    box-shadow: 0 0 0 3px rgba(75, 158, 149, 0.1);
+}
+
+.business-time-fields input:disabled {
+    background: #f3f5f7;
+    color: #a1a9b0;
+    cursor: not-allowed;
+}
+
+.business-time-fields span {
+    font-size: 13px;
+    color: #89929b;
+}
+
+.business-status {
+    justify-self: end;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.business-status.open {
+    background: #eaf7f1;
+    color: #18724e;
+}
+
+.business-status.closed {
+    background: #f0f2f4;
+    color: #77818a;
+}
+
+
+/* =========================================================
+   APPOINTMENT TYPES
+========================================================= */
+
+.appointment-types-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.appointment-type-item {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 13px;
+    border: 1px solid #e1e6ea;
+    border-radius: 9px;
+    background: #fafbfc;
+}
+
+.appointment-type-item span {
+    color: #37424c;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.delete-setting-button {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: #89939d;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.delete-setting-button:hover {
+    background: #fff0f0;
+    color: #c03939;
+}
+
+.add-setting-row {
+    display: flex;
+    gap: 10px;
+}
+
+.add-setting-row input {
+    flex: 1;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #d8dee4;
+    border-radius: 8px;
+    outline: none;
+    font-size: 13px;
+    color: #303b45;
+}
+
+.add-setting-row input:focus {
+    border-color: #4b9e95;
+    box-shadow: 0 0 0 3px rgba(75, 158, 149, 0.1);
+}
+
+.add-setting-button {
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 15px;
+    border: 1px solid #187c72;
+    border-radius: 8px;
+    background: #187c72;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+    white-space: nowrap;
+}
+
+.add-setting-button:hover {
+    background: #126b62;
+}
+
+
+/* =========================================================
+   HOLIDAYS
+========================================================= */
+
+.holidays-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 18px;
+}
+
+.holiday-item {
+    min-height: 52px;
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    align-items: center;
+    gap: 15px;
+    padding: 7px 10px 7px 14px;
+    border: 1px solid #e1e6ea;
+    border-radius: 9px;
+    background: #fafbfc;
+}
+
+.holiday-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #187c72;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.holiday-item strong {
+    color: #3a444e;
+    font-size: 13px;
+}
+
+.add-holiday-row {
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    align-items: end;
+    gap: 12px;
+    padding-top: 5px;
+}
+
+.add-holiday-row > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-holiday-row label {
+    margin-bottom: 7px;
+    color: #3a444e;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.add-holiday-row input {
+    width: 100%;
+    height: 42px;
+    padding: 0 11px;
+    box-sizing: border-box;
+    border: 1px solid #d8dee4;
+    border-radius: 8px;
+    outline: none;
+    color: #303b45;
+    font-size: 13px;
+}
+
+.add-holiday-row input:focus {
+    border-color: #4b9e95;
+    box-shadow: 0 0 0 3px rgba(75, 158, 149, 0.1);
+}
+
+.holiday-add-button {
+    height: 42px;
+}
+
+.no-holidays {
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 18px;
+    border: 1px dashed #d6dde2;
+    border-radius: 9px;
+    color: #929ba4;
+}
+
+.no-holidays p {
+    margin: 0;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   BOTTOM ACTIONS
+========================================================= */
+
+.settings-bottom-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 5px 0 30px;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.appointment-settings-loading {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    color: #78838d;
+}
+
+.appointment-settings-loading p {
+    margin: 0;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   SPINNER
+========================================================= */
+
+.spin {
+    animation: settings-spin 0.9s linear infinite;
+}
+
+@keyframes settings-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .appointment-settings-page {
+        padding: 20px;
+    }
+
+    .appointment-settings-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .settings-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .business-hours-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 15px 0;
+    }
+
+    .business-status {
+        justify-self: start;
+    }
+
+    .appointment-types-list {
+        grid-template-columns: 1fr;
+    }
+
+    .add-holiday-row {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .appointment-settings-page {
+        padding: 15px;
+    }
+
+    .settings-card {
+        padding: 18px;
+    }
+
+    .settings-header-actions {
+        width: 100%;
+    }
+
+    .settings-refresh-button,
+    .settings-save-button {
+        flex: 1;
+    }
+
+    .settings-title-row h1 {
+        font-size: 21px;
+    }
+
+    .settings-title-row p {
+        font-size: 12px;
+    }
+
+    .settings-toggle-row {
+        align-items: flex-start;
+    }
+
+    .business-time-fields {
+        flex-wrap: wrap;
+    }
+
+    .business-time-fields input {
+        flex: 1;
+        min-width: 110px;
+    }
+
+    .add-setting-row {
+        flex-direction: column;
+    }
+
+    .holiday-item {
+        grid-template-columns: 1fr auto;
+    }
+
+    .holiday-item strong {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+
+    .settings-bottom-actions {
+        flex-direction: column;
+    }
+
+    .settings-bottom-actions button {
+        width: 100%;
+    }
+
+}

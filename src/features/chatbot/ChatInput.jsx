@@ -1,61 +1,69 @@
-import {useState} from "react";
+import { useState } from "react";
 
 
-export default function ChatInput({onSend}){
+export default function ChatInput({
+    onSend
+}) {
+
+    const [text, setText] =
+        useState("");
 
 
-const [text,setText]=useState("");
+    function submit(e) {
+
+        e.preventDefault();
 
 
-
-function submit(e){
-
-e.preventDefault();
+        const value =
+            text.trim();
 
 
-if(!text.trim())
-return;
+        if (!value) {
+            return;
+        }
 
 
-onSend(text);
+        onSend(value);
 
-setText("");
+        setText("");
 
-}
-
-
-
-return (
-
-<form
-
-className="chat-input"
-
-onSubmit={submit}
-
->
+    }
 
 
-<input
+    return (
 
-value={text}
+        <form
+            className="chat-input"
+            onSubmit={submit}
+        >
 
-onChange={(e)=>setText(e.target.value)}
+            <input
 
-placeholder="Type your answer..."
+                value={text}
 
-/>
+                onChange={e =>
+                    setText(
+                        e.target.value
+                    )
+                }
+
+                placeholder="Type your answer..."
+
+                autoComplete="off"
+
+            />
 
 
-<button>
+            <button
+                type="submit"
+            >
 
-Send
+                Send
 
-</button>
+            </button>
 
+        </form>
 
-</form>
-
-)
+    );
 
 }

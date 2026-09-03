@@ -1,2 +1,11 @@
-export default function Settings(){ 
+import AppointmentSettings
+    from "./AppointmentSettings";
+
+
+export default function Settings() {
+
+    return (
+        <AppointmentSettings />
+    );
+
 }

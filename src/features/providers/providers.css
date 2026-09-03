@@ -1,0 +1,1831 @@
+.providers-page {
+    width: 100%;
+    min-height: 100%;
+    padding: 28px 32px 40px;
+
+    box-sizing: border-box;
+
+    background: #f8fafc;
+}
+
+
+/* ==========================================
+   PAGE HEADER
+========================================== */
+
+.providers-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 26px;
+}
+
+.providers-title {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.providers-title-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #eaf2ff;
+    color: #2563eb;
+}
+
+.providers-header h1 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+.providers-header p {
+    margin: 5px 0 0;
+
+    color: #718096;
+
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   HEADER BUTTONS
+========================================== */
+
+.providers-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.refresh-provider-btn,
+.add-provider-btn {
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 0 15px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.refresh-provider-btn {
+    border: 1px solid #dbe3ed;
+
+    background: white;
+
+    color: #475569;
+}
+
+.refresh-provider-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.refresh-provider-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.add-provider-btn {
+    border: 1px solid #2563eb;
+
+    background: #2563eb;
+
+    color: white;
+
+    box-shadow:
+        0 3px 8px rgba(37, 99, 235, 0.16);
+}
+
+.add-provider-btn:hover {
+    background: #1d4ed8;
+
+    box-shadow:
+        0 5px 14px rgba(37, 99, 235, 0.22);
+
+    transform: translateY(-1px);
+}
+
+.spin {
+    animation: provider-spin 1s linear infinite;
+}
+
+@keyframes provider-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ==========================================
+   TOOLBAR
+========================================== */
+
+.providers-toolbar {
+    min-height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 14px;
+
+    margin-bottom: 20px;
+
+    background: white;
+
+    border: 1px solid #e6ebf2;
+
+    border-radius: 11px;
+
+    box-sizing: border-box;
+}
+
+.provider-search {
+    width: 390px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #e1e7ef;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    color: #94a3b8;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.provider-search:focus-within {
+    background: white;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.provider-search input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #1e293b;
+
+    font-size: 13px;
+}
+
+.provider-search input::placeholder {
+    color: #94a3b8;
+}
+
+.provider-count {
+    padding-right: 6px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.provider-count strong {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   PROVIDER GRID
+========================================== */
+
+.providers-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(310px, 1fr));
+
+    gap: 18px;
+}
+
+
+/* ==========================================
+   PROVIDER CARD
+========================================== */
+
+.provider-card {
+    min-width: 0;
+
+    padding: 20px;
+
+    background: white;
+
+    border: 1px solid #e6ebf2;
+
+    border-radius: 13px;
+
+    box-shadow:
+        0 2px 5px rgba(15, 23, 42, 0.025);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.provider-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #d6e0ec;
+
+    box-shadow:
+        0 9px 25px rgba(15, 23, 42, 0.07);
+}
+
+
+/* ==========================================
+   CARD HEADER
+========================================== */
+
+.provider-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.provider-avatar {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eaf2ff;
+
+    color: #2563eb;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.provider-number {
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+
+/* ==========================================
+   PROVIDER INFO
+========================================== */
+
+.provider-info {
+    margin-top: 16px;
+}
+
+.provider-info h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 17px;
+    font-weight: 650;
+}
+
+.provider-specialty {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 7px;
+
+    color: #2563eb;
+
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+.provider-specialty svg {
+    flex-shrink: 0;
+}
+
+
+/* ==========================================
+   CONTACT
+========================================== */
+
+.provider-contact {
+    display: flex;
+    flex-direction: column;
+
+    gap: 11px;
+
+    margin-top: 18px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #eef2f6;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 0;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+.contact-item svg {
+    flex-shrink: 0;
+
+    color: #94a3b8;
+}
+
+.contact-item span {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================
+   CARD FOOTER
+========================================== */
+
+.provider-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 18px;
+
+    padding-top: 13px;
+
+    border-top: 1px solid #eef2f6;
+
+    color: #94a3b8;
+
+    font-size: 10.5px;
+}
+
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.providers-loading {
+    min-height: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.provider-spinner {
+    width: 30px;
+    height: 30px;
+
+    margin-bottom: 12px;
+
+    border: 3px solid #e2e8f0;
+
+    border-top-color: #2563eb;
+
+    border-radius: 50%;
+
+    animation: provider-spin 0.8s linear infinite;
+}
+
+
+/* ==========================================
+   ERROR
+========================================== */
+
+.providers-error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 15px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 9px;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    font-size: 13px;
+}
+
+.providers-error button {
+    border: none;
+
+    background: transparent;
+
+    color: #991b1b;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.no-providers {
+    grid-column: 1 / -1;
+
+    min-height: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 13px;
+
+    text-align: center;
+}
+
+.empty-provider-icon {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eef4ff;
+
+    color: #2563eb;
+}
+
+.no-providers h3 {
+    margin: 14px 0 5px;
+
+    color: #334155;
+
+    font-size: 16px;
+}
+
+.no-providers p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+.empty-add-provider-btn {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 16px;
+
+    padding: 9px 14px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* ==========================================
+   MODAL OVERLAY
+========================================== */
+
+.provider-modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.52);
+
+    backdrop-filter: blur(3px);
+
+    overflow-y: auto;
+}
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+.provider-modal {
+    width: min(560px, 100%);
+
+    background: white;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 25px 60px rgba(15, 23, 42, 0.25);
+
+    overflow: hidden;
+}
+
+
+/* ==========================================
+   MODAL HEADER
+========================================== */
+
+.provider-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: 21px 23px;
+
+    border-bottom: 1px solid #edf1f5;
+}
+
+.provider-modal-header h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 19px;
+}
+
+.provider-modal-header p {
+    margin: 5px 0 0;
+
+    color: #718096;
+
+    font-size: 12px;
+}
+
+.provider-modal-close {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    cursor: pointer;
+}
+
+.provider-modal-close:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+
+/* ==========================================
+   MODAL BODY
+========================================== */
+
+.provider-modal-body {
+    padding: 35px 24px;
+}
+
+.coming-soon-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+}
+
+.coming-soon-message h3 {
+    margin: 14px 0 6px;
+
+    color: #334155;
+
+    font-size: 16px;
+}
+
+.coming-soon-message p {
+    max-width: 360px;
+
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================
+   MODAL FOOTER
+========================================== */
+
+.provider-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 9px;
+
+    padding: 15px 23px;
+
+    border-top: 1px solid #edf1f5;
+
+    background: #fafbfd;
+}
+
+.modal-cancel-btn,
+.modal-save-btn {
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 0 15px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.modal-cancel-btn {
+    border: 1px solid #dbe2ea;
+
+    background: white;
+
+    color: #475569;
+}
+
+.modal-cancel-btn:hover {
+    background: #f8fafc;
+}
+
+.modal-save-btn {
+    border: none;
+
+    background: #2563eb;
+
+    color: white;
+}
+
+.modal-save-btn:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 800px) {
+
+    .providers-page {
+        padding: 22px 18px 30px;
+    }
+
+    .providers-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 16px;
+    }
+
+    .providers-header-actions {
+        width: 100%;
+    }
+
+    .refresh-provider-btn,
+    .add-provider-btn {
+        flex: 1;
+    }
+
+    .provider-search {
+        width: 100%;
+    }
+
+    .providers-toolbar {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .provider-count {
+        padding-left: 4px;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .providers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .providers-title-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .providers-header h1 {
+        font-size: 23px;
+    }
+
+    .providers-header-actions {
+        flex-direction: column;
+    }
+
+    .refresh-provider-btn,
+    .add-provider-btn {
+        width: 100%;
+    }
+
+}
+
+/* ==========================================
+   PROVIDERS LIST
+========================================== */
+
+.providers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+/* ==========================================
+   PROVIDER ROW
+========================================== */
+
+.provider-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 90px;
+
+    padding: 18px 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 12px;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.provider-row:hover {
+    border-color: #cbd5e1;
+
+    box-shadow:
+        0 6px 18px rgba(15, 23, 42, 0.06);
+
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   LEFT SIDE
+========================================== */
+
+.provider-main {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    min-width: 0;
+}
+
+
+/* ==========================================
+   AVATAR
+========================================== */
+
+.provider-avatar {
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #edf4ff;
+
+    color: #2563eb;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   NAME
+========================================== */
+
+.provider-name-section {
+    min-width: 0;
+}
+
+.provider-name-section h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 15px;
+    font-weight: 650;
+}
+
+.provider-specialty {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 6px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+.provider-specialty svg {
+    color: #2563eb;
+}
+
+
+/* ==========================================
+   RIGHT SIDE
+========================================== */
+
+.provider-details {
+    display: flex;
+    align-items: center;
+
+    gap: 22px;
+
+    margin-left: 30px;
+}
+
+
+/* ==========================================
+   EMAIL / PHONE
+========================================== */
+
+.provider-detail {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    min-width: 180px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+.provider-detail svg {
+    flex-shrink: 0;
+
+    color: #94a3b8;
+}
+
+.provider-detail span {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================
+   PROVIDER ID
+========================================== */
+
+.provider-id {
+    min-width: 55px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 950px) {
+
+    .provider-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .provider-details {
+        width: 100%;
+
+        margin-left: 67px;
+
+        gap: 18px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .provider-details {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+
+        margin-left: 0;
+    }
+
+    .provider-detail {
+        min-width: 0;
+
+        width: 100%;
+    }
+
+}
+
+/* ==========================================
+   ADD PROVIDER BUTTON
+========================================== */
+
+.add-provider-btn {
+    height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 0 16px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 8px rgba(37, 99, 235, 0.18);
+
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.add-provider-btn:hover {
+    background: #1d4ed8;
+
+    box-shadow:
+        0 5px 14px rgba(37, 99, 235, 0.22);
+
+    transform: translateY(-1px);
+}
+
+.add-provider-btn:active {
+    transform: translateY(0);
+}
+
+
+/* ==========================================
+   MODAL OVERLAY
+========================================== */
+
+.provider-modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.52);
+
+    backdrop-filter: blur(4px);
+
+    overflow-y: auto;
+}
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+.provider-modal {
+    width: 100%;
+
+    max-width: 560px;
+
+    max-height: calc(100vh - 40px);
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 25px 70px rgba(15, 23, 42, 0.22);
+
+    overflow: hidden;
+
+    animation:
+        provider-modal-in
+        0.2s ease-out;
+}
+
+
+@keyframes provider-modal-in {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(10px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* ==========================================
+   MODAL HEADER
+========================================== */
+
+.provider-modal-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    padding: 22px 24px 20px;
+
+    border-bottom: 1px solid #edf1f5;
+}
+
+.modal-title-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.modal-icon {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #edf4ff;
+
+    color: #2563eb;
+}
+
+.provider-modal-header h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+.provider-modal-header p {
+    margin: 7px 0 0 46px;
+
+    color: #7b8798;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   CLOSE BUTTON
+========================================== */
+
+.provider-modal-close {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.provider-modal-close:hover {
+    background: #eef2f7;
+
+    color: #1e293b;
+}
+
+
+/* ==========================================
+   MODAL BODY
+========================================== */
+
+.provider-modal-body {
+    padding: 22px 24px 24px;
+
+    max-height: calc(100vh - 190px);
+
+    overflow-y: auto;
+}
+
+
+/* ==========================================
+   FORM ROW
+========================================== */
+
+.form-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 15px;
+}
+
+
+/* ==========================================
+   FORM GROUP
+========================================== */
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    margin-bottom: 17px;
+}
+
+.form-group label {
+    color: #334155;
+
+    font-size: 12px;
+
+    font-weight: 650;
+}
+
+.form-group label span {
+    margin-left: 3px;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================
+   INPUTS
+========================================== */
+
+.form-group input {
+    width: 100%;
+
+    height: 42px;
+
+    padding: 0 12px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #1e293b;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder {
+    color: #a0aaba;
+}
+
+.form-group input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+
+/* ==========================================
+   INPUT WITH ICON
+========================================== */
+
+.input-with-icon {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+}
+
+.input-with-icon svg {
+    position: absolute;
+
+    left: 12px;
+
+    color: #94a3b8;
+
+    pointer-events: none;
+}
+
+.input-with-icon input {
+    padding-left: 38px;
+}
+
+
+/* ==========================================
+   FORM ERROR
+========================================== */
+
+.provider-form-error {
+    margin-bottom: 18px;
+
+    padding: 11px 13px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 8px;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   MODAL FOOTER
+========================================== */
+
+.provider-modal-footer {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 9px;
+
+    padding: 15px 24px;
+
+    border-top: 1px solid #edf1f5;
+
+    background: #fafbfd;
+}
+
+
+/* ==========================================
+   MODAL BUTTONS
+========================================== */
+
+.modal-cancel-btn,
+.modal-save-btn {
+    height: 39px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 0 15px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.modal-cancel-btn {
+    border: 1px solid #dbe2ea;
+
+    background: white;
+
+    color: #475569;
+}
+
+.modal-cancel-btn:hover {
+    background: #f8fafc;
+}
+
+
+.modal-save-btn {
+    border: none;
+
+    background: #2563eb;
+
+    color: white;
+}
+
+.modal-save-btn:hover {
+    background: #1d4ed8;
+}
+
+.modal-save-btn:disabled,
+.modal-cancel-btn:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================
+   RESPONSIVE MODAL
+========================================== */
+
+@media (max-width: 600px) {
+
+    .provider-modal-overlay {
+        padding: 12px;
+    }
+
+    .provider-modal {
+        max-height: calc(100vh - 24px);
+    }
+
+    .provider-modal-header {
+        padding: 18px;
+    }
+
+    .provider-modal-body {
+        padding: 18px;
+    }
+
+    .provider-modal-footer {
+        padding: 14px 18px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+    .provider-modal-header p {
+        margin-left: 0;
+    }
+
+}
+
+/* ==========================================
+   DELETE PROVIDER BUTTON
+========================================== */
+
+.delete-provider-btn {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    margin-left: 4px;
+
+    border: 1px solid transparent;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.delete-provider-btn:hover {
+    background: #fef2f2;
+
+    border-color: #fecaca;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================
+   DELETE MODAL OVERLAY
+========================================== */
+
+.delete-modal-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.5);
+
+    backdrop-filter: blur(4px);
+}
+
+
+/* ==========================================
+   DELETE MODAL
+========================================== */
+
+.delete-modal {
+    width: 100%;
+
+    max-width: 400px;
+
+    padding: 28px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    text-align: center;
+
+    box-shadow:
+        0 25px 70px rgba(15, 23, 42, 0.2);
+
+    animation:
+        delete-modal-in
+        0.2s ease-out;
+}
+
+
+@keyframes delete-modal-in {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(8px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* ==========================================
+   DELETE ICON
+========================================== */
+
+.delete-modal-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 15px;
+
+    border-radius: 50%;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================
+   DELETE TITLE
+========================================== */
+
+.delete-modal h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   DELETE DESCRIPTION
+========================================== */
+
+.delete-modal p {
+    margin: 10px auto 5px;
+
+    max-width: 330px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+.delete-modal p strong {
+    color: #334155;
+
+    font-weight: 650;
+}
+
+.delete-warning {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #b91c1c;
+
+    font-size: 11px;
+}
+
+
+/* ==========================================
+   DELETE ACTIONS
+========================================== */
+
+.delete-modal-actions {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-top: 23px;
+}
+
+
+.delete-cancel-btn,
+.delete-confirm-btn {
+    height: 39px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 0 15px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+
+.delete-cancel-btn {
+    border: 1px solid #dbe2ea;
+
+    background: white;
+
+    color: #475569;
+}
+
+.delete-cancel-btn:hover {
+    background: #f8fafc;
+}
+
+
+.delete-confirm-btn {
+    border: none;
+
+    background: #dc2626;
+
+    color: white;
+}
+
+.delete-confirm-btn:hover {
+    background: #b91c1c;
+}
+
+
+.delete-cancel-btn:disabled,
+.delete-confirm-btn:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}

@@ -14,6 +14,21 @@ from "./routes/providerRoutes.js";
 import serviceRoutes 
 from "./routes/serviceRoutes.js";
 
+import dashboardRoutes 
+from "./routes/dashboard.js"
+
+import authRoutes 
+from "./routes/authRoutes.js";
+
+import appointmentSettingsRoutes
+from "./routes/appointmentSettings.js";
+
+import patientRoutes from "./routes/patientRoutes.js";
+
+import usersRoutes from "./routes/usersRoutes.js";
+
+import appointmentTypesRouter
+    from "./routes/appointmentTypes.js";
 
 
 dotenv.config();
@@ -27,23 +42,49 @@ app.use(cors());
 
 app.use(express.json());
 
-
+app.use(
+    "/api/dashboard", dashboardRoutes
+)
 
 app.use(
-"/api/appointments",
-appointmentRoutes
+    "/api/settings/appointments",
+    appointmentSettingsRoutes
+);
+
+app.use(
+    "/api/appointment-types",
+    appointmentTypesRouter
+);
+
+app.use(
+    "/api/auth",
+    authRoutes
+);
+
+app.use(
+    "/api/appointments",
+    appointmentRoutes
+);
+
+app.use(
+    "/api/patients",
+    patientRoutes
+);
+
+app.use(
+    "/api/providers",
+    providerRoutes
 );
 
 
 app.use(
-"/api/providers",
-providerRoutes
+    "/api/services",
+    serviceRoutes
 );
 
-
 app.use(
-"/api/services",
-serviceRoutes
+    "/api/users",
+    usersRoutes
 );
 
 

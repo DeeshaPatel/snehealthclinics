@@ -1,96 +1,69 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+
+import DashboardSidebar from "./DashboardSidebar";
+import DashboardTopbar from "./DashboardTopbar";
+
+import "./dashboardLayout.css";
 
 
-export default function DashboardLayout(){
+export default function DashboardLayout() {
 
-return (
-
-<div className="dashboard-layout">
+    const navigate = useNavigate();
 
 
-<aside className="sidebar">
+    const token =
+        localStorage.getItem("token");
 
 
-<h2>
-SNE Health
-</h2>
+    const storedUser =
+        localStorage.getItem("user");
 
 
-<nav>
+    const user =
+        storedUser
+            ? JSON.parse(storedUser)
+            : null;
 
 
-<a href="/dashboard">
-Dashboard
-</a>
+    const handleLogout = () => {
+
+        localStorage.removeItem("token");
+
+        localStorage.removeItem("user");
+
+        navigate("/login", {
+            replace: true
+        });
+
+    };
 
 
-<a href="/appointments">
-Appointments
-</a>
+    return (
+
+        <div className="dashboard-layout">
+
+            <DashboardSidebar
+                onLogout={handleLogout}
+            />
 
 
-<a href="/patients">
-Patients
-</a>
+            <div className="dashboard-main">
+
+                <DashboardTopbar
+                    user={user}
+                />
 
 
-<a href="/providers">
-Providers
-</a>
+                <main className="dashboard-page">
 
+                    <Outlet />
 
-<a href="/reports">
-Reports
-</a>
+                </main>
 
+            </div>
 
-<a href="/settings">
-Settings
-</a>
+        </div>
 
-
-</nav>
-
-
-</aside>
-
-
-
-<div className="dashboard-content">
-
-
-<header className="dashboard-header">
-
-
-<h3>
-Clinic Management
-</h3>
-
-
-<div>
-Admin
-</div>
-
-
-</header>
-
-
-
-<main>
-
-
-<Outlet/>
-
-
-</main>
-
-
-</div>
-
-
-</div>
-
-
-)
+    );
 
 }

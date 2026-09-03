@@ -1,79 +1,88 @@
 import API from "./axios";
 
+/*
+=========================================================
+PROVIDERS
+=========================================================
+*/
 
+export const getProviders = async () => {
 
-export const createAppointment = async(data)=>{
+    const response = await API.get("/providers");
 
-
-const response = await API.post(
-
-"/appointments",
-
-data
-
-);
-
-
-return response.data;
-
+    return response.data;
 
 };
 
 
+/*
+=========================================================
+CREATE APPOINTMENT
+=========================================================
+*/
 
-export const getAppointments = async()=>{
+export const createAppointment = async (data) => {
 
+    const response = await API.post(
+        "/appointments",
+        data
+    );
 
-const response = await API.get(
-
-"/appointments"
-
-);
-
-
-return response.data;
-
-
-};
-
-
-
-export const updateAppointment = async(
-
-id,
-
-data
-
-)=>{
-
-
-const response = await API.put(
-
-`/appointments/${id}`,
-
-data
-
-);
-
-
-return response.data;
-
+    return response.data;
 
 };
 
 
+/*
+=========================================================
+GET APPOINTMENTS
+=========================================================
+*/
 
-export const deleteAppointment = async(id)=>{
+export const getAppointments = async () => {
+
+    const response = await API.get(
+        "/appointments"
+    );
+
+    return response.data;
+
+};
 
 
-const response = await API.delete(
+/*
+=========================================================
+UPDATE APPOINTMENT
+=========================================================
+*/
 
-`/appointments/${id}`
+export const updateAppointment = async (
+    id,
+    data
+) => {
 
-);
+    const response = await API.put(
+        `/appointments/${id}`,
+        data
+    );
+
+    return response.data;
+
+};
 
 
-return response.data;
+/*
+=========================================================
+DELETE APPOINTMENT
+=========================================================
+*/
 
+export const deleteAppointment = async (id) => {
+
+    const response = await API.delete(
+        `/appointments/${id}`
+    );
+
+    return response.data;
 
 };

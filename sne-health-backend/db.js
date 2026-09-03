@@ -1,20 +1,35 @@
-const { Pool } = require("pg");
-require("dotenv").config();
+import pg from "pg";
+import dotenv from "dotenv";
 
+dotenv.config();
+
+const { Pool } = pg;
 
 const pool = new Pool({
 
-    user: process.env.DB_USER,
+    user: env.DB_USER,
 
-    host: process.env.DB_HOST,
+    host: env.DB_HOST,
 
-    database: process.env.DB_NAME,
+    database: env.DB_NAME,
 
-    password: process.env.DB_PASSWORD,
+    password: env.DB_PASSWORD,
 
-    port: process.env.DB_PORT
+    port: env.DB_PORT,
+
+    ssl: {
+        rejectUnauthorized: false
+    }
 
 });
 
+pool.on("connect", () => {
+    console.log("Connected to PostgreSQL");
+});
 
-module.exports = pool;
+pool.on("error", (err) => {
+    console.error("Unexpected PostgreSQL error:", err);
+});
+
+
+export default pool;
