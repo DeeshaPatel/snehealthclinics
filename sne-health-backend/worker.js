@@ -1,8 +1,9 @@
 import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-
 import { httpServerHandler } from "cloudflare:node";
+
+// ===============================
+// ROUTES
+// ===============================
 
 import appointmentRoutes from "./routes/appointmentRoutes.js";
 import providerRoutes from "./routes/providerRoutes.js";
@@ -14,40 +15,83 @@ import patientRoutes from "./routes/patientRoutes.js";
 import usersRoutes from "./routes/usersRoutes.js";
 import appointmentTypesRouter from "./routes/appointmentTypes.js";
 
-dotenv.config();
+
+// ===============================
+// EXPRESS APP
+// ===============================
 
 const app = express();
 
-/*
-=========================================================
-CORS
-=========================================================
-*/
 
-app.use(
-    cors({
-        origin: [
-            "https://snehealth.ca",
-            "https://www.snehealth.ca",
-            "http://localhost:5173"
-        ],
-        credentials: true
-    })
-);
-
-/*
-=========================================================
-MIDDLEWARE
-=========================================================
-*/
+// ===============================
+// MIDDLEWARE
+// ===============================
 
 app.use(express.json());
 
-/*
-=========================================================
-ROUTES
-=========================================================
-*/
+
+// ===============================
+// CORS
+// ===============================
+
+app.use((req, res, next) => {
+
+    const allowedOrigins = [
+        "https://snehealth.ca",
+        "https://www.snehealth.ca",
+        "http://localhost:5173"
+    ];
+
+    const origin = req.headers.origin;
+
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+    }
+
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+    );
+
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization"
+    );
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(204);
+    }
+
+    next();
+});
+
+
+// ===============================
+// HEALTH CHECK
+// ===============================
+
+app.get("/", (req, res) => {
+
+    res.json({
+        message: "SNE Health API Running"
+    });
+
+});
+
+app.get("/api/health", (req, res) => {
+
+    res.json({
+        success: true,
+        message: "Backend is healthy"
+    });
+
+});
+
+
+// ===============================
+// ROUTES
+// ===============================
 
 app.use(
     "/api/dashboard",
@@ -94,25 +138,28 @@ app.use(
     usersRoutes
 );
 
-/*
-=========================================================
-HEALTH CHECK
-=========================================================
-*/
 
-app.get("/", (req, res) => {
-    res.json({
-        message: "SNE Health API Running"
+// ===============================
+// 404 HANDLER
+// ===============================
+
+app.use((req, res) => {
+
+    res.status(404).json({
+        success: false,
+        message: "API endpoint not found",
+        path: req.path
     });
+
 });
 
-/*
-=========================================================
-CLOUDFLARE WORKER
-=========================================================
-*/
+
+// ===============================
+// CLOUDFLARE WORKER
+// ===============================
+
+app.listen(3000);
 
 export default httpServerHandler({
-    port: 8080,
-    fetch: app.fetch
+    port: 3000
 });
