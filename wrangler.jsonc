@@ -3,6 +3,8 @@
 
   "name": "snehealthclinics",
 
+  "main": "./sne-health-backend/server.js",
+
   "compatibility_date": "2026-06-09",
 
   "observability": {
