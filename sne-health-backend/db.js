@@ -1,36 +1,95 @@
 import { Client } from "pg";
 
-/**
- * Execute a PostgreSQL query through Cloudflare Hyperdrive.
- *
- * @param {object} env - Cloudflare Worker environment
- * @param {string} text - SQL query
- * @param {Array} params - Query parameters
- * @returns {Promise<object>} PostgreSQL query result
- */
-export async function query(env, text, params = []) {
+/*
+=========================================================
+CLOUDFLARE HYPERDRIVE DATABASE
+=========================================================
+*/
+
+let currentEnv = null;
+
+
+/*
+=========================================================
+SET CLOUDFLARE ENVIRONMENT
+=========================================================
+*/
+
+export function setDatabaseEnv(env) {
+    currentEnv = env;
+}
+
+
+/*
+=========================================================
+GET DATABASE CLIENT
+=========================================================
+*/
+
+async function getClient() {
+
+    if (!currentEnv) {
+        throw new Error(
+            "Database environment has not been initialized."
+        );
+    }
+
+    if (!currentEnv.HYPERDRIVE) {
+        throw new Error(
+            "HYPERDRIVE binding is not available."
+        );
+    }
 
     const client = new Client({
-        connectionString: env.HYPERDRIVE.connectionString
+        connectionString:
+            currentEnv.HYPERDRIVE.connectionString
     });
 
-    try {
+    await client.connect();
 
-        await client.connect();
-
-        const result = await client.query(text, params);
-
-        return result;
-
-    } catch (error) {
-
-        console.error("PostgreSQL error:", error);
-
-        throw error;
-
-    } finally {
-
-        await client.end();
-
-    }
+    return client;
 }
+
+
+/*
+=========================================================
+POOL-COMPATIBLE QUERY
+=========================================================
+*/
+
+const pool = {
+
+    async query(text, params = []) {
+
+        const client = await getClient();
+
+        try {
+
+            const result = await client.query(
+                text,
+                params
+            );
+
+            return result;
+
+        } catch (error) {
+
+            console.error(
+                "PostgreSQL query error:",
+                error
+            );
+
+            throw error;
+
+        } finally {
+
+            await client.end();
+
+        }
+    }
+
+};
+
+
+export default pool;
+

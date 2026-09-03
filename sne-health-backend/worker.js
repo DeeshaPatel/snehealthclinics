@@ -1,5 +1,6 @@
 import express from "express";
 import { httpServerHandler } from "cloudflare:node";
+import { setDatabaseEnv } from "./db.js";
 
 // ===============================
 // ROUTES
@@ -21,6 +22,19 @@ import appointmentTypesRouter from "./routes/appointmentTypes.js";
 // ===============================
 
 const app = express();
+
+/* ========================================================= 
+CLOUDFLARE ENVIRONMENT 
+========================================================= 
+Make Hyperdrive's env available to db.js before 
+any database route executes.
+========================================================= */ 
+app.use((req, res, next) => { 
+    if (globalThis.__CF_ENV__) { 
+        setDatabaseEnv(globalThis.__CF_ENV__); 
+    } 
+    next(); 
+});
 
 
 // ===============================
@@ -160,6 +174,30 @@ app.use((req, res) => {
 
 app.listen(3000);
 
-export default httpServerHandler({
+const handler = httpServerHandler({
     port: 3000
 });
+
+export default {
+
+    async fetch(request, env, ctx) {
+
+        /*
+        ================================================
+        Make Cloudflare environment available to db.js
+        ================================================
+        */
+
+        setDatabaseEnv(env);
+
+        /*
+        ================================================
+        Pass request to Express
+        ================================================
+        */
+
+        return handler.fetch(request, env, ctx);
+
+    }
+
+};
