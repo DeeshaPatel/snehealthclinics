@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/wrangler/config-schema.json",
 
-  "name": "sne-health-backend",
+  "name": "snehealthclinics-backend",
 
   "main": "./worker.js",
 
