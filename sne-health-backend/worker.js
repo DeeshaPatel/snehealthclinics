@@ -51,9 +51,12 @@ app.use(express.json());
 app.use((req, res, next) => {
 
     const allowedOrigins = [
-        "https://snehealth.ca",
-        "https://www.snehealth.ca",
-        "http://localhost:5173"
+        "https://snehealthclinics.ca",
+        "https://www.snehealthclinics.ca",
+
+        // Optional local development
+        "http://localhost:5173",
+        "http://localhost:5174"
     ];
 
     const origin = req.headers.origin;
