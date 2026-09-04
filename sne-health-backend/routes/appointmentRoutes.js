@@ -78,10 +78,10 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
 
-    const client = await pool.connect();
+    let client = null;
 
     try {
-
+        client = await pool.connect();
         const {
             first_name,
             last_name,
@@ -462,10 +462,10 @@ router.put("/:id", async (req, res) => {
         notes
     } = req.body;
 
-    const client = await pool.connect();
+    let client = null;
 
     try {
-
+        client = await pool.connect();
         console.log(
             "UPDATE APPOINTMENT REQUEST:",
             {

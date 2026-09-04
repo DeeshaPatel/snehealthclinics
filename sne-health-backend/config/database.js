@@ -1,26 +1,95 @@
-import pg from "pg";
-import dotenv from "dotenv";
+import { Client } from "pg";
+
+/*
+=========================================================
+CLOUDFLARE HYPERDRIVE DATABASE
+=========================================================
+*/
+
+let currentEnv = null;
 
 
-dotenv.config();
+/*
+=========================================================
+SET CLOUDFLARE ENVIRONMENT
+=========================================================
+*/
+
+export function setDatabaseEnv(env) {
+    currentEnv = env;
+}
 
 
-const { Pool } = pg;
+/*
+=========================================================
+GET DATABASE CLIENT
+=========================================================
+*/
+
+async function getClient() {
+
+    if (!currentEnv) {
+        throw new Error(
+            "Database environment has not been initialized."
+        );
+    }
+
+    if (!currentEnv.HYPERDRIVE) {
+        throw new Error(
+            "HYPERDRIVE binding is not available."
+        );
+    }
+
+    const client = new Client({
+        connectionString:
+            currentEnv.HYPERDRIVE.connectionString
+    });
+
+    await client.connect();
+
+    return client;
+}
 
 
-const pool = new Pool({
+/*
+=========================================================
+POOL-COMPATIBLE QUERY
+=========================================================
+*/
 
-host:process.env.DB_HOST,
+const pool = {
 
-port:process.env.DB_PORT,
+    async query(text, params = []) {
 
-database:process.env.DB_NAME,
+        const client = await getClient();
 
-user:process.env.DB_USER,
+        try {
 
-password:process.env.DB_PASSWORD,
+            const result = await client.query(
+                text,
+                params
+            );
 
-});
+            return result;
+
+        } catch (error) {
+
+            console.error(
+                "PostgreSQL query error:",
+                error
+            );
+
+            throw error;
+
+        } finally {
+
+            await client.end();
+
+        }
+    }
+
+};
 
 
 export default pool;
+

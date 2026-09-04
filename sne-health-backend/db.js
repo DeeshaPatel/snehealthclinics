@@ -1,33 +1,12 @@
 import { Client } from "pg";
 
-/*
-=========================================================
-CLOUDFLARE HYPERDRIVE DATABASE
-=========================================================
-*/
-
 let currentEnv = null;
-
-
-/*
-=========================================================
-SET CLOUDFLARE ENVIRONMENT
-=========================================================
-*/
 
 export function setDatabaseEnv(env) {
     currentEnv = env;
 }
 
-
-/*
-=========================================================
-GET DATABASE CLIENT
-=========================================================
-*/
-
 async function getClient() {
-
     if (!currentEnv) {
         throw new Error(
             "Database environment has not been initialized."
@@ -50,14 +29,11 @@ async function getClient() {
     return client;
 }
 
-
-/*
-=========================================================
-POOL-COMPATIBLE QUERY
-=========================================================
-*/
-
 const pool = {
+
+    // ========================================
+    // NORMAL QUERY
+    // ========================================
 
     async query(text, params = []) {
 
@@ -65,12 +41,10 @@ const pool = {
 
         try {
 
-            const result = await client.query(
+            return await client.query(
                 text,
                 params
             );
-
-            return result;
 
         } catch (error) {
 
@@ -86,10 +60,55 @@ const pool = {
             await client.end();
 
         }
+
+    },
+
+
+    // ========================================
+    // TRANSACTION CONNECTION
+    // ========================================
+
+    async connect() {
+
+        const client =
+            await getClient();
+
+        return {
+
+            query: async (
+                text,
+                params = []
+            ) => {
+
+                return await client.query(
+                    text,
+                    params
+                );
+
+            },
+
+
+            release: async () => {
+
+                try {
+
+                    await client.end();
+
+                } catch (error) {
+
+                    console.error(
+                        "PostgreSQL connection close error:",
+                        error
+                    );
+
+                }
+
+            }
+
+        };
+
     }
 
 };
 
-
 export default pool;
-
