@@ -10,21 +10,76 @@ const router = express.Router();
 
 
 // ============================================================
-// EMAIL TRANSPORTER
+// CLOUDFLARE / LOCAL ENVIRONMENT
 // ============================================================
+//
+// Cloudflare Worker:
+//     globalThis.__CF_ENV__
+//
+// Local Node development:
+//     process.env
+//
+// The Worker sets __CF_ENV__ before Express handles the request.
+//
 
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
+function getEnv() {
 
-    secure:
-        Number(process.env.SMTP_PORT) === 465,
+    return globalThis.__CF_ENV__ || process.env;
 
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD
+}
+
+
+// ============================================================
+// SMTP TRANSPORTER
+// ============================================================
+//
+// IMPORTANT:
+// Do NOT create this at module load time.
+//
+// Cloudflare environment variables are available when the
+// Worker receives a request.
+//
+
+function createTransporter(env) {
+
+    if (
+        !env.SMTP_HOST ||
+        !env.SMTP_USER ||
+        !env.SMTP_PASSWORD
+    ) {
+
+        throw new Error(
+            "SMTP configuration is missing."
+        );
+
     }
-});
+
+    const port =
+        Number(env.SMTP_PORT) || 587;
+
+    return nodemailer.createTransport({
+
+        host:
+            env.SMTP_HOST,
+
+        port,
+
+        secure:
+            port === 465,
+
+        auth: {
+
+            user:
+                env.SMTP_USER,
+
+            pass:
+                env.SMTP_PASSWORD
+
+        }
+
+    });
+
+}
 
 
 // ============================================================
@@ -35,47 +90,104 @@ router.post("/login", async (req, res) => {
 
     try {
 
-        const { email, password } = req.body;
+        // ------------------------------------------------------
+        // Get Cloudflare / local environment
+        // ------------------------------------------------------
+
+        const env = getEnv();
+
+        // ------------------------------------------------------
+        // Validate JWT configuration
+        // ------------------------------------------------------
+
+        const JWT_SECRET =
+            env.JWT_SECRET;
+
+        if (!JWT_SECRET) {
+
+            console.error(
+                "JWT_SECRET is missing from the Cloudflare environment."
+            );
+
+            return res.status(500).json({
+
+                message:
+                    "Server configuration error"
+
+            });
+
+        }
+
+        // ------------------------------------------------------
+        // Validate request
+        // ------------------------------------------------------
+
+        const {
+            email,
+            password
+        } = req.body;
 
         if (!email || !password) {
 
             return res.status(400).json({
-                message: "Email and password are required"
+
+                message:
+                    "Email and password are required"
+
             });
 
         }
 
+        // ------------------------------------------------------
+        // Normalize email
+        // ------------------------------------------------------
+
         const normalizedEmail =
-            email.trim().toLowerCase();
+            email
+                .trim()
+                .toLowerCase();
 
+        // ------------------------------------------------------
+        // Find user
+        // ------------------------------------------------------
 
-        const result = await pool.query(
-            `
-            SELECT
-                id,
-                first_name,
-                last_name,
-                email,
-                password_hash,
-                role
-            FROM users
-            WHERE LOWER(email) = $1
-            `,
-            [normalizedEmail]
-        );
+        const result =
+            await pool.query(
+                `
+                SELECT
+                    id,
+                    first_name,
+                    last_name,
+                    email,
+                    password_hash,
+                    role
+                FROM users
+                WHERE LOWER(email) = $1
+                `,
+                [normalizedEmail]
+            );
 
+        // ------------------------------------------------------
+        // User not found
+        // ------------------------------------------------------
 
         if (result.rows.length === 0) {
 
             return res.status(401).json({
-                message: "Invalid email or password"
+
+                message:
+                    "Invalid email or password"
+
             });
 
         }
 
+        const user =
+            result.rows[0];
 
-        const user = result.rows[0];
-
+        // ------------------------------------------------------
+        // Verify password
+        // ------------------------------------------------------
 
         const passwordMatch =
             await bcrypt.compare(
@@ -83,53 +195,60 @@ router.post("/login", async (req, res) => {
                 user.password_hash
             );
 
-
         if (!passwordMatch) {
 
             return res.status(401).json({
-                message: "Invalid email or password"
+
+                message:
+                    "Invalid email or password"
+
             });
 
         }
 
+        // ------------------------------------------------------
+        // Generate JWT
+        // ------------------------------------------------------
 
-        if (!process.env.JWT_SECRET) {
+        const token =
+            jwt.sign(
 
-            console.error(
-                "JWT_SECRET is missing from .env"
+                {
+                    id:
+                        user.id,
+
+                    email:
+                        user.email,
+
+                    role:
+                        user.role
+
+                },
+
+                JWT_SECRET,
+
+                {
+                    expiresIn:
+                        "8h"
+                }
+
             );
 
-            return res.status(500).json({
-                message: "Server configuration error"
-            });
+        // ------------------------------------------------------
+        // Return response
+        // ------------------------------------------------------
 
-        }
+        return res.json({
 
-
-        const token = jwt.sign(
-            {
-                id: user.id,
-                email: user.email,
-                role: user.role
-            },
-
-            process.env.JWT_SECRET,
-
-            {
-                expiresIn: "8h"
-            }
-        );
-
-
-        res.json({
-
-            message: "Login successful",
+            message:
+                "Login successful",
 
             token,
 
             user: {
 
-                id: user.id,
+                id:
+                    user.id,
 
                 firstName:
                     user.first_name,
@@ -154,8 +273,11 @@ router.post("/login", async (req, res) => {
             error
         );
 
-        res.status(500).json({
-            message: "Server error"
+        return res.status(500).json({
+
+            message:
+                "Server error"
+
         });
 
     }
@@ -171,48 +293,112 @@ router.post("/forgot-password", async (req, res) => {
 
     try {
 
-        const { email } = req.body;
+        // ------------------------------------------------------
+        // Get environment
+        // ------------------------------------------------------
 
+        const env =
+            getEnv();
 
-        if (!email) {
+        // ------------------------------------------------------
+        // Validate frontend URL
+        // ------------------------------------------------------
 
-            return res.status(400).json({
-                message: "Email address is required"
+        if (!env.FRONTEND_URL) {
+
+            console.error(
+                "FRONTEND_URL is missing from the Cloudflare environment."
+            );
+
+            return res.status(500).json({
+
+                message:
+                    "Server configuration error"
+
             });
 
         }
 
+        // ------------------------------------------------------
+        // Validate SMTP configuration
+        // ------------------------------------------------------
+
+        let transporter;
+
+        try {
+
+            transporter =
+                createTransporter(env);
+
+        } catch (smtpError) {
+
+            console.error(
+                "SMTP configuration error:",
+                smtpError
+            );
+
+            return res.status(500).json({
+
+                message:
+                    "Email service is not configured."
+
+            });
+
+        }
+
+        // ------------------------------------------------------
+        // Validate request
+        // ------------------------------------------------------
+
+        const {
+            email
+        } = req.body;
+
+        if (!email) {
+
+            return res.status(400).json({
+
+                message:
+                    "Email address is required"
+
+            });
+
+        }
+
+        // ------------------------------------------------------
+        // Normalize email
+        // ------------------------------------------------------
 
         const normalizedEmail =
-            email.trim().toLowerCase();
-
+            email
+                .trim()
+                .toLowerCase();
 
         // ------------------------------------------------------
         // Find user
         // ------------------------------------------------------
 
-        const result = await pool.query(
-            `
-            SELECT
-                id,
-                first_name,
-                last_name,
-                email
-            FROM users
-            WHERE LOWER(email) = $1
-            `,
-            [normalizedEmail]
-        );
-
+        const result =
+            await pool.query(
+                `
+                SELECT
+                    id,
+                    first_name,
+                    last_name,
+                    email
+                FROM users
+                WHERE LOWER(email) = $1
+                `,
+                [normalizedEmail]
+            );
 
         /*
          * IMPORTANT:
          *
-         * We return the same response whether the account
-         * exists or not.
+         * Always return the same response if the account
+         * doesn't exist.
          *
-         * This prevents attackers from discovering
-         * which emails are registered.
+         * This prevents email/account enumeration.
          */
 
         if (result.rows.length === 0) {
@@ -226,9 +412,8 @@ router.post("/forgot-password", async (req, res) => {
 
         }
 
-
-        const user = result.rows[0];
-
+        const user =
+            result.rows[0];
 
         // ------------------------------------------------------
         // Delete previous reset tokens
@@ -242,14 +427,14 @@ router.post("/forgot-password", async (req, res) => {
             [user.id]
         );
 
-
         // ------------------------------------------------------
         // Generate secure reset token
         // ------------------------------------------------------
 
         const resetToken =
-            crypto.randomBytes(32).toString("hex");
-
+            crypto
+                .randomBytes(32)
+                .toString("hex");
 
         // ------------------------------------------------------
         // Hash token
@@ -261,9 +446,8 @@ router.post("/forgot-password", async (req, res) => {
                 .update(resetToken)
                 .digest("hex");
 
-
         // ------------------------------------------------------
-        // Token expires in 1 hour
+        // Token expires in one hour
         // ------------------------------------------------------
 
         const expiresAt =
@@ -271,7 +455,6 @@ router.post("/forgot-password", async (req, res) => {
                 Date.now() +
                 60 * 60 * 1000
             );
-
 
         // ------------------------------------------------------
         // Save hashed token
@@ -299,20 +482,21 @@ router.post("/forgot-password", async (req, res) => {
             ]
         );
 
-
         // ------------------------------------------------------
         // Create reset URL
         // ------------------------------------------------------
 
-        const resetUrl =
-            `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+        const frontendUrl =
+            env.FRONTEND_URL
+                .replace(/\/$/, "");
 
+        const resetUrl =
+            `${frontendUrl}/reset-password/${resetToken}`;
 
         console.log(
-            "Password reset URL:",
-            resetUrl
+            "Password reset requested for:",
+            user.email
         );
-
 
         // ------------------------------------------------------
         // Send email
@@ -321,7 +505,7 @@ router.post("/forgot-password", async (req, res) => {
         await transporter.sendMail({
 
             from:
-                process.env.SMTP_FROM,
+                env.SMTP_FROM,
 
             to:
                 user.email,
@@ -394,8 +578,7 @@ router.post("/forgot-password", async (req, res) => {
 
                             <h2
                                 style="
-                                    margin:
-                                        12px 0 4px;
+                                    margin:12px 0 4px;
                                     color:#0f172a;
                                 "
                             >
@@ -443,17 +626,14 @@ router.post("/forgot-password", async (req, res) => {
                                 Reset your password
                             </h1>
 
-
                             <p
                                 style="
                                     color:#475569;
                                     line-height:1.6;
                                 "
                             >
-                                Hello
-                                ${user.first_name},
+                                Hello ${user.first_name},
                             </p>
-
 
                             <p
                                 style="
@@ -466,7 +646,6 @@ router.post("/forgot-password", async (req, res) => {
                                 staff account.
                             </p>
 
-
                             <p
                                 style="
                                     color:#475569;
@@ -476,7 +655,6 @@ router.post("/forgot-password", async (req, res) => {
                                 Click the button below to create
                                 a new password.
                             </p>
-
 
                             <div
                                 style="
@@ -489,8 +667,7 @@ router.post("/forgot-password", async (req, res) => {
                                     href="${resetUrl}"
                                     style="
                                         display:inline-block;
-                                        padding:
-                                            14px 28px;
+                                        padding:14px 28px;
                                         background:#0f766e;
                                         color:#ffffff;
                                         text-decoration:none;
@@ -502,7 +679,6 @@ router.post("/forgot-password", async (req, res) => {
                                 </a>
 
                             </div>
-
 
                             <div
                                 style="
@@ -527,7 +703,6 @@ router.post("/forgot-password", async (req, res) => {
                                 </p>
 
                             </div>
-
 
                             <p
                                 style="
@@ -569,14 +744,16 @@ router.post("/forgot-password", async (req, res) => {
 
         });
 
+        // ------------------------------------------------------
+        // Response
+        // ------------------------------------------------------
 
-        res.json({
+        return res.json({
 
             message:
                 "If an account exists for this email, a password reset link has been sent."
 
         });
-
 
     } catch (error) {
 
@@ -585,8 +762,7 @@ router.post("/forgot-password", async (req, res) => {
             error
         );
 
-
-        res.status(500).json({
+        return res.status(500).json({
 
             message:
                 "Unable to process password reset request."
@@ -607,18 +783,16 @@ router.post("/reset-password", async (req, res) => {
     const client =
         await pool.connect();
 
-
     try {
+
+        // ------------------------------------------------------
+        // Validate request
+        // ------------------------------------------------------
 
         const {
             token,
             password
         } = req.body;
-
-
-        // ------------------------------------------------------
-        // Validate input
-        // ------------------------------------------------------
 
         if (!token || !password) {
 
@@ -630,7 +804,6 @@ router.post("/reset-password", async (req, res) => {
             });
 
         }
-
 
         // ------------------------------------------------------
         // Password validation
@@ -647,9 +820,8 @@ router.post("/reset-password", async (req, res) => {
 
         }
 
-
         // ------------------------------------------------------
-        // Hash received token
+        // Hash reset token
         // ------------------------------------------------------
 
         const tokenHash =
@@ -658,9 +830,8 @@ router.post("/reset-password", async (req, res) => {
                 .update(token)
                 .digest("hex");
 
-
         // ------------------------------------------------------
-        // Find valid token
+        // Find valid reset token
         // ------------------------------------------------------
 
         const tokenResult =
@@ -679,7 +850,6 @@ router.post("/reset-password", async (req, res) => {
                 [tokenHash]
             );
 
-
         if (tokenResult.rows.length === 0) {
 
             return res.status(400).json({
@@ -691,10 +861,8 @@ router.post("/reset-password", async (req, res) => {
 
         }
 
-
         const resetRecord =
             tokenResult.rows[0];
-
 
         // ------------------------------------------------------
         // Hash new password
@@ -706,7 +874,6 @@ router.post("/reset-password", async (req, res) => {
                 12
             );
 
-
         // ------------------------------------------------------
         // Start transaction
         // ------------------------------------------------------
@@ -714,7 +881,6 @@ router.post("/reset-password", async (req, res) => {
         await client.query(
             "BEGIN"
         );
-
 
         // ------------------------------------------------------
         // Update password
@@ -733,7 +899,6 @@ router.post("/reset-password", async (req, res) => {
                 ]
             );
 
-
         if (updateResult.rowCount === 0) {
 
             await client.query(
@@ -749,7 +914,6 @@ router.post("/reset-password", async (req, res) => {
 
         }
 
-
         // ------------------------------------------------------
         // Mark token as used
         // ------------------------------------------------------
@@ -762,7 +926,6 @@ router.post("/reset-password", async (req, res) => {
             `,
             [resetRecord.id]
         );
-
 
         // ------------------------------------------------------
         // Delete other reset tokens
@@ -780,44 +943,53 @@ router.post("/reset-password", async (req, res) => {
             ]
         );
 
-
         // ------------------------------------------------------
-        // Commit
+        // Commit transaction
         // ------------------------------------------------------
 
         await client.query(
             "COMMIT"
         );
 
+        // ------------------------------------------------------
+        // Success
+        // ------------------------------------------------------
 
-        res.json({
+        return res.json({
 
             message:
                 "Your password has been reset successfully."
 
         });
 
-
     } catch (error) {
 
-        await client.query(
-            "ROLLBACK"
-        );
+        try {
 
+            await client.query(
+                "ROLLBACK"
+            );
+
+        } catch (rollbackError) {
+
+            console.error(
+                "Rollback error:",
+                rollbackError
+            );
+
+        }
 
         console.error(
             "Reset password error:",
             error
         );
 
-
-        res.status(500).json({
+        return res.status(500).json({
 
             message:
                 "Unable to reset password."
 
         });
-
 
     } finally {
 
@@ -827,5 +999,9 @@ router.post("/reset-password", async (req, res) => {
 
 });
 
+
+// ============================================================
+// EXPORT
+// ============================================================
 
 export default router;
