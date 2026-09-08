@@ -19,7 +19,7 @@ export default function DashboardCards({ stats }) {
                     </span>
 
                     <strong className="card-value">
-                        {stats.totalPatients}
+                        {stats?.totalPatients ?? 0}
                     </strong>
 
                 </div>
@@ -42,7 +42,7 @@ export default function DashboardCards({ stats }) {
                     </span>
 
                     <strong className="card-value">
-                        {stats.todayAppointments}
+                        {stats?.todayAppointments ?? 0}
                     </strong>
 
                 </div>
@@ -65,7 +65,30 @@ export default function DashboardCards({ stats }) {
                     </span>
 
                     <strong className="card-value">
-                        {stats.totalProviders}
+                        {stats?.totalProviders ?? 0}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            {/* Blood Work */}
+
+            <div className="dashboard-card">
+
+                <div className="card-icon">
+                    🩸
+                </div>
+
+                <div className="card-content">
+
+                    <span className="card-label">
+                        Blood Work Today
+                    </span>
+
+                    <strong className="card-value">
+                        {stats?.bloodWorkToday ?? 0}
                     </strong>
 
                 </div>

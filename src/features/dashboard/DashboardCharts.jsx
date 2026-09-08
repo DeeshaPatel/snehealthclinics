@@ -1,11 +1,23 @@
 export default function DashboardCharts({ data }) {
 
+    const todayAppointments =
+        data?.todayAppointmentsList ?? [];
+
+    const recentPatients =
+        data?.recentPatients ?? [];
+
+    const bloodWorkAppointments =
+        data?.bloodWorkAppointments ?? [];
+
+
     return (
 
         <div className="dashboard-content">
 
 
-            {/* Today's Appointments */}
+            {/* =====================================================
+                TODAY'S APPOINTMENTS
+            ===================================================== */}
 
             <section className="dashboard-section">
 
@@ -16,13 +28,13 @@ export default function DashboardCharts({ data }) {
                     </h2>
 
                     <span>
-                        {data.todayAppointments}
+                        {data?.todayAppointments ?? 0}
                     </span>
 
                 </div>
 
 
-                {data.todayAppointmentsList.length === 0 ? (
+                {todayAppointments.length === 0 ? (
 
                     <div className="empty-state">
 
@@ -45,13 +57,15 @@ export default function DashboardCharts({ data }) {
 
                     <div className="appointment-list">
 
-                        {data.todayAppointmentsList.map(
+                        {todayAppointments.map(
                             (appointment) => (
 
                                 <div
                                     className="appointment-row"
                                     key={appointment.id}
                                 >
+
+                                    {/* Time */}
 
                                     <div className="appointment-time">
 
@@ -60,19 +74,17 @@ export default function DashboardCharts({ data }) {
                                     </div>
 
 
+                                    {/* Patient / Appointment */}
+
                                     <div className="appointment-info">
 
                                         <strong>
 
-                                            {
-                                                appointment.patient_first_name
-                                            }
+                                            {appointment.patient_first_name}
 
                                             {" "}
 
-                                            {
-                                                appointment.patient_last_name
-                                            }
+                                            {appointment.patient_last_name}
 
                                         </strong>
 
@@ -85,22 +97,22 @@ export default function DashboardCharts({ data }) {
                                     </div>
 
 
+                                    {/* Provider */}
+
                                     <div className="appointment-provider">
 
                                         Dr.{" "}
 
-                                        {
-                                            appointment.provider_first_name
-                                        }
+                                        {appointment.provider_first_name}
 
                                         {" "}
 
-                                        {
-                                            appointment.provider_last_name
-                                        }
+                                        {appointment.provider_last_name}
 
                                     </div>
 
+
+                                    {/* Status */}
 
                                     <div className="appointment-status">
 
@@ -120,7 +132,9 @@ export default function DashboardCharts({ data }) {
             </section>
 
 
-            {/* Recent Patients */}
+            {/* =====================================================
+                RECENT PATIENTS
+            ===================================================== */}
 
             <section className="dashboard-section">
 
@@ -133,55 +147,198 @@ export default function DashboardCharts({ data }) {
                 </div>
 
 
-                <div className="patient-list">
+                {recentPatients.length === 0 ? (
 
-                    {data.recentPatients.map(
-                        (patient) => (
+                    <div className="empty-state">
 
-                            <div
-                                className="patient-row"
-                                key={patient.id}
-                            >
+                        <div className="empty-icon">
+                            👥
+                        </div>
 
-                                <div className="patient-avatar">
+                        <h3>
+                            No patients yet
+                        </h3>
 
-                                    {patient.first_name
-                                        .charAt(0)}
+                        <p>
+                            There are no patients in the system.
+                        </p>
 
-                                    {patient.last_name
-                                        .charAt(0)}
+                    </div>
+
+                ) : (
+
+                    <div className="patient-list">
+
+                        {recentPatients.map(
+                            (patient) => (
+
+                                <div
+                                    className="patient-row"
+                                    key={patient.id}
+                                >
+
+                                    {/* Patient Avatar */}
+
+                                    <div className="patient-avatar">
+
+                                        {patient.first_name
+                                            ?.charAt(0)
+                                            ?.toUpperCase()}
+
+                                        {patient.last_name
+                                            ?.charAt(0)
+                                            ?.toUpperCase()}
+
+                                    </div>
+
+
+                                    {/* Patient Information */}
+
+                                    <div className="patient-info">
+
+                                        <strong>
+
+                                            {patient.first_name}
+
+                                            {" "}
+
+                                            {patient.last_name}
+
+                                        </strong>
+
+                                        <span>
+
+                                            {patient.phone || "No phone number"}
+
+                                        </span>
+
+                                    </div>
 
                                 </div>
 
+                            )
+                        )}
 
-                                <div className="patient-info">
+                    </div>
 
-                                    <strong>
+                )}
 
-                                        {patient.first_name}
+            </section>
 
-                                        {" "}
 
-                                        {patient.last_name}
+            {/* =====================================================
+                BLOOD WORK APPOINTMENTS
+            ===================================================== */}
 
-                                    </strong>
+            <section className="dashboard-section">
 
-                                    <span>
+                <div className="section-header">
 
-                                        {patient.phone}
+                    <h2>
+                        Blood Work Appointments
+                    </h2>
 
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        )
-                    )}
+                    <span>
+                        {bloodWorkAppointments.length}
+                    </span>
 
                 </div>
 
+
+                {bloodWorkAppointments.length === 0 ? (
+
+                    <div className="empty-state">
+
+                        <div className="empty-icon">
+                            🩸
+                        </div>
+
+                        <h3>
+                            No blood work appointments
+                        </h3>
+
+                        <p>
+                            There are no blood work appointments scheduled.
+                        </p>
+
+                    </div>
+
+                ) : (
+
+                    <div className="appointment-list">
+
+                        {bloodWorkAppointments.map(
+                            (appointment) => (
+
+                                <div
+                                    className="appointment-row"
+                                    key={appointment.id}
+                                >
+
+                                    {/* Time */}
+
+                                    <div className="appointment-time">
+
+                                        {appointment.start_time}
+
+                                    </div>
+
+
+                                    {/* Patient */}
+
+                                    <div className="appointment-info">
+
+                                        <strong>
+
+                                            {appointment.patient_first_name}
+
+                                            {" "}
+
+                                            {appointment.patient_last_name}
+
+                                        </strong>
+
+                                        <span>
+                                            🩸 Blood Work
+                                        </span>
+
+                                    </div>
+
+
+                                    {/* Provider */}
+
+                                    <div className="appointment-provider">
+
+                                        Dr.{" "}
+
+                                        {appointment.provider_first_name}
+
+                                        {" "}
+
+                                        {appointment.provider_last_name}
+
+                                    </div>
+
+
+                                    {/* Status */}
+
+                                    <div className="appointment-status">
+
+                                        {appointment.status}
+
+                                    </div>
+
+                                </div>
+
+                            )
+                        )}
+
+                    </div>
+
+                )}
+
             </section>
+
 
         </div>
 

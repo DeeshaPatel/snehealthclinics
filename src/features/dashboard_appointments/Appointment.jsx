@@ -92,6 +92,7 @@ const EMPTY_APPOINTMENT = {
 
     provider_id: "",
 
+    appointment_type: "",
     title: "",
     appointment_date: "",
     start_time: "",
@@ -411,6 +412,9 @@ export default function Appointment() {
     const [providers, setProviders] =
         useState([]);
 
+    const [selectedProviderId, setSelectedProviderId] = 
+        useState("");
+
     const [appointmentSettings, setAppointmentSettings] =
         useState(null);
 
@@ -481,6 +485,30 @@ export default function Appointment() {
             );
 
         }, [appointmentSettings]);
+
+
+    const filteredAppointments = useMemo(() => {
+
+            if (!selectedProviderId) {
+                return appointments;
+            }
+        
+            return appointments.filter(
+                appointment =>
+                    String(appointment.provider_id) ===
+                    String(selectedProviderId)
+            );
+        
+        }, [appointments, selectedProviderId]);
+
+    const calendarAppointments = useMemo(() => {
+
+            return filteredAppointments.filter(
+                appointment =>
+                    appointment.appointment_type !== "Blood Work"
+            );
+        
+        }, [filteredAppointments]);
 
 
     /* =====================================================
@@ -1730,31 +1758,61 @@ export default function Appointment() {
 
                 <div className="calendar-toolbar-right">
 
+                    <div className="provider-filter">
+
+                        <label htmlFor="provider-filter">
+                            Provider
+                        </label>
+
+                        <select
+                            id="provider-filter"
+                            value={selectedProviderId}
+                            onChange={event =>
+                                setSelectedProviderId(
+                                    event.target.value
+                                )
+                            }
+                        >
+
+                            <option value="">
+                                All Providers
+                            </option>
+
+                            {providers.map(provider => (
+
+                                <option
+                                    key={provider.id}
+                                    value={provider.id}
+                                >
+                                    Dr. {provider.first_name} {provider.last_name}
+                                </option>
+
+                            ))}
+
+                        </select>
+
+                    </div>
+
+
                     <div className="week-navigation">
 
                         <button
                             type="button"
-                            onClick={
-                                previousWeek
-                            }
+                            onClick={previousWeek}
                         >
                             ‹
                         </button>
 
                         <button
                             type="button"
-                            onClick={
-                                goToToday
-                            }
+                            onClick={goToToday}
                         >
                             Today
                         </button>
 
                         <button
                             type="button"
-                            onClick={
-                                nextWeek
-                            }
+                            onClick={nextWeek}
                         >
                             ›
                         </button>
@@ -1774,7 +1832,7 @@ export default function Appointment() {
 
                 <TimeGrid
                     appointments={
-                        appointments
+                        calendarAppointments
                     }
                     currentWeek={
                         currentWeek
