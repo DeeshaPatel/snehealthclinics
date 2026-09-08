@@ -10,12 +10,62 @@ import "./dashboard.css";
 
 export default function Dashboard() {
 
-    const [dashboard, setDashboard] = useState(null);
+    const [dashboard, setDashboard] =
+        useState(null);
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] =
+        useState(true);
 
-    const [error, setError] = useState(null);
+    const [error, setError] =
+        useState(null);
 
+
+    // =========================================================
+    // LOAD DASHBOARD
+    // =========================================================
+
+    const loadDashboard =
+        async () => {
+
+            try {
+
+                setLoading(true);
+
+                setError(null);
+
+                const data =
+                    await getDashboard();
+
+                console.log(
+                    "Dashboard data:",
+                    data
+                );
+
+                setDashboard(data);
+
+            } catch (error) {
+
+                console.error(
+                    "Dashboard loading error:",
+                    error
+                );
+
+                setError(
+                    "Unable to load dashboard data."
+                );
+
+            } finally {
+
+                setLoading(false);
+
+            }
+
+        };
+
+
+    // =========================================================
+    // INITIAL LOAD
+    // =========================================================
 
     useEffect(() => {
 
@@ -24,59 +74,54 @@ export default function Dashboard() {
     }, []);
 
 
-    const loadDashboard = async () => {
-
-        try {
-
-            setLoading(true);
-
-            const data = await getDashboard();
-
-            console.log("Dashboard data:", data);
-
-            setDashboard(data);
-
-        } catch (error) {
-
-            console.error(
-                "Dashboard loading error:",
-                error
-            );
-
-            setError(
-                "Unable to load dashboard data."
-            );
-
-        } finally {
-
-            setLoading(false);
-
-        }
-
-    };
-
+    // =========================================================
+    // LOADING
+    // =========================================================
 
     if (loading) {
 
         return (
+
             <div className="dashboard-loading">
+
                 Loading dashboard...
+
             </div>
+
         );
 
     }
 
+
+    // =========================================================
+    // ERROR
+    // =========================================================
 
     if (error) {
 
         return (
+
             <div className="dashboard-error">
+
                 {error}
+
             </div>
+
         );
 
     }
 
+
+    if (!dashboard) {
+
+        return null;
+
+    }
+
+
+    // =========================================================
+    // RENDER
+    // =========================================================
 
     return (
 
@@ -106,6 +151,7 @@ export default function Dashboard() {
 
             <DashboardCharts
                 data={dashboard}
+                onRefresh={loadDashboard}
             />
 
         </div>

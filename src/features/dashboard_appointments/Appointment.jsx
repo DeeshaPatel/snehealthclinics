@@ -503,10 +503,7 @@ export default function Appointment() {
 
     const calendarAppointments = useMemo(() => {
 
-            return filteredAppointments.filter(
-                appointment =>
-                    appointment.appointment_type !== "Blood Work"
-            );
+            return filteredAppointments;
         
         }, [filteredAppointments]);
 
@@ -1832,7 +1829,7 @@ export default function Appointment() {
 
                 <TimeGrid
                     appointments={
-                        calendarAppointments
+                        filteredAppointments
                     }
                     currentWeek={
                         currentWeek
