@@ -51,6 +51,12 @@ router.get("/", async (req, res) => {
 
             WHERE a.appointment_date =
                 COALESCE($1::date, CURRENT_DATE)
+                
+            AND NOT (
+                    LOWER(TRIM(COALESCE(a.title, ''))) LIKE '%blood%'
+                    OR
+                    LOWER(TRIM(COALESCE(a.reason, ''))) LIKE '%blood%'
+                )
 
         `, [selectedDate]);
 
