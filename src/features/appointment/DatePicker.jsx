@@ -158,20 +158,6 @@ export default function DatePicker({
                 disabled={disabled}
 
 
-                modifiers={{
-
-                    holiday:
-                        holidayDates
-
-                }}
-
-
-                modifiersClassNames={{
-
-                    holiday:
-                        "holiday-date"
-
-                }}
 
             />
 
