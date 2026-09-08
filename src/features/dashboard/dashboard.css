@@ -1,3 +1,7 @@
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
 .dashboard {
     padding: 30px;
     background: #f8fafc;
@@ -5,42 +9,45 @@
 }
 
 
+/* =========================================================
+   HEADER
+========================================================= */
+
 .dashboard-header {
     margin-bottom: 30px;
 }
-
 
 .dashboard-header h1 {
     margin: 0;
     font-size: 30px;
     font-weight: 700;
+    color: #0f172a;
 }
 
-
 .dashboard-header p {
-    margin-top: 6px;
+    margin: 6px 0 0;
     color: #64748b;
 }
 
 
-/* =========================
-   CARDS
-========================= */
+/* =========================================================
+   DASHBOARD CARDS
+========================================================= */
 
 .dashboard-cards {
     display: grid;
 
-    grid-template-columns:
-        repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 
     gap: 20px;
 
     margin-bottom: 30px;
 }
 
-
 .dashboard-card {
-    background: white;
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
 
     border-radius: 12px;
 
@@ -52,7 +59,16 @@
 
     gap: 18px;
 
-    border: 1px solid #e2e8f0;
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 20px rgba(15, 23, 42, 0.08);
 }
 
 
@@ -60,7 +76,10 @@
     width: 50px;
     height: 50px;
 
+    flex-shrink: 0;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -97,32 +116,41 @@
 }
 
 
-/* =========================
-   CONTENT
-========================= */
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
 
 .dashboard-content {
     display: grid;
 
-    grid-template-columns:
-        2fr 1fr;
+    grid-template-columns: 2fr 1fr;
 
     gap: 20px;
+
+    align-items: start;
 }
 
 
+/* =========================================================
+   SECTIONS
+========================================================= */
+
 .dashboard-section {
-    background: white;
+    background: #ffffff;
 
     border: 1px solid #e2e8f0;
 
     border-radius: 12px;
 
     padding: 24px;
+
+    margin-bottom: 20px;
 }
 
 
-.section-header {
+/* Section Header */
+
+.dashboard-section-header {
     display: flex;
 
     align-items: center;
@@ -132,32 +160,107 @@
     margin-bottom: 20px;
 }
 
-
-.section-header h2 {
+.dashboard-section-header h2 {
     margin: 0;
 
     font-size: 18px;
+
+    font-weight: 700;
+
+    color: #0f172a;
+}
+
+.dashboard-section-header p {
+    margin: 5px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
 }
 
 
-/* =========================
-   APPOINTMENTS
-========================= */
+.dashboard-section-count {
+    min-width: 32px;
+    height: 32px;
 
-.appointment-list {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 10px;
+
+    border-radius: 20px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   APPOINTMENT LIST
+========================================================= */
+
+.dashboard-appointments-list {
     display: flex;
 
     flex-direction: column;
 
-    gap: 12px;
+    gap: 10px;
 }
 
+
+.dashboard-appointment-clickable {
+    width: 100%;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    font: inherit;
+
+    color: inherit;
+}
+
+
+.dashboard-appointment-clickable .appointment-row {
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.dashboard-appointment-clickable:hover .appointment-row {
+    background: #f1f5f9;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+
+/* Appointment Row */
 
 .appointment-row {
     display: grid;
 
     grid-template-columns:
-        90px 1fr 150px 100px;
+        90px
+        minmax(150px, 1fr)
+        180px;
 
     align-items: center;
 
@@ -168,13 +271,23 @@
     border-radius: 8px;
 
     background: #f8fafc;
+
+    border: 1px solid transparent;
 }
 
+
+/* Appointment Time */
 
 .appointment-time {
+    font-size: 14px;
+
     font-weight: 600;
+
+    color: #0f172a;
 }
 
+
+/* Appointment Patient / Type */
 
 .appointment-info {
     display: flex;
@@ -182,8 +295,23 @@
     flex-direction: column;
 
     gap: 4px;
+
+    min-width: 0;
 }
 
+.appointment-info strong {
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #0f172a;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
 
 .appointment-info span {
     color: #64748b;
@@ -192,33 +320,56 @@
 }
 
 
+/* Provider */
+
 .appointment-provider {
     color: #475569;
 
-    font-size: 14px;
+    font-size: 13px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
 
-.appointment-status {
-    font-size: 12px;
+/* =========================================================
+   BLOOD WORK
+========================================================= */
 
-    padding: 5px 9px;
-
-    border-radius: 20px;
-
-    background: #dcfce7;
-
-    color: #166534;
-
-    text-align: center;
+.blood-work-section {
+    position: relative;
 }
 
 
-/* =========================
-   PATIENTS
-========================= */
+/* Blood Work Appointment */
 
-.patient-list {
+.blood-work-appointment .appointment-row {
+    border-left: 3px solid #dc2626;
+}
+
+
+.blood-work-appointment:hover .appointment-row {
+    background: #fef2f2;
+}
+
+
+/* Blood Work label */
+
+.blood-work-appointment .appointment-info span {
+    color: #dc2626;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   PATIENT LIST
+========================================================= */
+
+.dashboard-patients-list {
     display: flex;
 
     flex-direction: column;
@@ -227,18 +378,31 @@
 }
 
 
-.patient-row {
+.dashboard-patient-row {
     display: flex;
 
     align-items: center;
 
     gap: 12px;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    transition: background 0.2s ease;
 }
 
 
-.patient-avatar {
+.dashboard-patient-row:hover {
+    background: #f8fafc;
+}
+
+
+.dashboard-patient-avatar {
     width: 40px;
     height: 40px;
+
+    flex-shrink: 0;
 
     border-radius: 50%;
 
@@ -253,66 +417,667 @@
     color: #0369a1;
 
     font-weight: 600;
+
+    font-size: 14px;
 }
 
 
-.patient-info {
+.dashboard-patient-info {
     display: flex;
 
     flex-direction: column;
 
     gap: 4px;
+
+    min-width: 0;
 }
 
 
-.patient-info span {
+.dashboard-patient-info strong {
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #0f172a;
+}
+
+
+.dashboard-patient-info span {
     font-size: 13px;
 
     color: #64748b;
 }
 
 
-/* =========================
+/* =========================================================
    EMPTY STATE
-========================= */
+========================================================= */
 
-.empty-state {
+.dashboard-empty-state {
     text-align: center;
 
-    padding: 40px 20px;
+    padding: 35px 20px;
 
     color: #64748b;
-}
-
-
-.empty-icon {
-    font-size: 35px;
-
-    margin-bottom: 10px;
-}
-
-
-.empty-state h3 {
-    color: #334155;
-
-    margin-bottom: 5px;
-}
-
-
-.empty-state p {
-    margin: 0;
 
     font-size: 14px;
 }
 
 
-/* =========================
+/* =========================================================
    LOADING / ERROR
-========================= */
+========================================================= */
 
 .dashboard-loading,
 .dashboard-error {
     padding: 40px;
 
     text-align: center;
+}
+
+.dashboard-loading {
+    color: #64748b;
+}
+
+.dashboard-error {
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   PATIENT DETAILS MODAL OVERLAY
+========================================================= */
+
+.dashboard-appointment-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    backdrop-filter: blur(2px);
+}
+
+
+/* =========================================================
+   PATIENT DETAILS MODAL
+========================================================= */
+
+.dashboard-appointment-modal {
+    width: 100%;
+
+    max-width: 800px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    padding: 28px;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.20);
+
+    animation:
+        dashboardModalOpen 0.2s ease-out;
+}
+
+
+@keyframes dashboardModalOpen {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(15px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.dashboard-modal-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    padding-bottom: 20px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+
+.dashboard-modal-header h2 {
+    margin: 0;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    color: #111827;
+}
+
+
+.dashboard-modal-header p {
+    margin: 5px 0 0;
+
+    font-size: 14px;
+
+    color: #6b7280;
+}
+
+
+/* Close Button */
+
+.dashboard-modal-close {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    font-size: 28px;
+
+    line-height: 1;
+
+    color: #6b7280;
+
+    cursor: pointer;
+}
+
+
+.dashboard-modal-close:hover {
+    background: #f3f4f6;
+
+    color: #111827;
+}
+
+
+.dashboard-modal-close:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MODAL STATUS
+========================================================= */
+
+.dashboard-modal-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 20px;
+
+    padding: 12px 16px;
+
+    border-radius: 8px;
+
+    background: #f3f4f6;
+
+    font-size: 14px;
+
+    color: #374151;
+}
+
+
+.dashboard-modal-status span {
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   APPOINTMENT DETAILS
+========================================================= */
+
+.dashboard-detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+
+    margin-top: 22px;
+}
+
+
+.dashboard-detail {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.dashboard-detail label {
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    color: #6b7280;
+}
+
+
+.dashboard-detail span {
+    font-size: 15px;
+
+    font-weight: 500;
+
+    color: #111827;
+}
+
+
+/* =========================================================
+   PATIENT INFORMATION
+========================================================= */
+
+.dashboard-patient-section {
+    margin-top: 28px;
+
+    padding-top: 24px;
+
+    border-top:
+        1px solid #e5e7eb;
+}
+
+
+.dashboard-patient-section h3,
+.dashboard-medical-info h3 {
+    margin: 0 0 18px;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    color: #111827;
+}
+
+
+.dashboard-patient-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+
+.dashboard-patient-grid > div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    padding: 13px;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    border: 1px solid #eef2f7;
+}
+
+
+.dashboard-patient-grid label {
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    color: #6b7280;
+}
+
+
+.dashboard-patient-grid span {
+    font-size: 14px;
+
+    font-weight: 500;
+
+    color: #111827;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   MEDICAL INFORMATION
+========================================================= */
+
+.dashboard-medical-info {
+    margin-top: 28px;
+
+    padding-top: 24px;
+
+    border-top:
+        1px solid #e5e7eb;
+}
+
+
+.dashboard-medical-info > div {
+    margin-bottom: 18px;
+}
+
+
+.dashboard-medical-info > div:last-child {
+    margin-bottom: 0;
+}
+
+
+.dashboard-medical-info label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    color: #6b7280;
+}
+
+
+.dashboard-medical-info p {
+    margin: 0;
+
+    padding: 12px;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    border: 1px solid #eef2f7;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    color: #374151;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   MODAL ERROR
+========================================================= */
+
+.dashboard-modal-error {
+    margin-top: 18px;
+
+    padding: 12px 16px;
+
+    border-radius: 8px;
+
+    background: #fee2e2;
+
+    border: 1px solid #fecaca;
+
+    color: #991b1b;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MODAL ACTIONS
+========================================================= */
+
+.dashboard-modal-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top:
+        1px solid #e5e7eb;
+}
+
+
+/* Check In */
+
+.dashboard-check-in-button {
+    padding: 11px 18px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
+}
+
+
+.dashboard-check-in-button:hover {
+    background: #1d4ed8;
+}
+
+
+.dashboard-check-in-button:active {
+    transform: scale(0.98);
+}
+
+
+.dashboard-check-in-button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* Already Checked In */
+
+.dashboard-checked-in {
+    padding: 10px 16px;
+
+    border-radius: 8px;
+
+    background: #dcfce7;
+
+    border: 1px solid #bbf7d0;
+
+    color: #166534;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+/* Close */
+
+.dashboard-close-button {
+    padding: 11px 18px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #e5e7eb;
+
+    color: #374151;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.dashboard-close-button:hover {
+    background: #d1d5db;
+}
+
+
+.dashboard-close-button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .dashboard-cards {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .dashboard-content {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .dashboard {
+        padding: 20px;
+    }
+
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+
+    .appointment-row {
+        grid-template-columns:
+            75px
+            minmax(0, 1fr);
+    }
+
+
+    .appointment-provider {
+        display: none;
+    }
+
+
+    .dashboard-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .dashboard-patient-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .dashboard {
+        padding: 15px;
+    }
+
+
+    .dashboard-section {
+        padding: 18px;
+    }
+
+
+    .dashboard-appointment-modal {
+        padding: 20px;
+
+        max-height: 95vh;
+    }
+
+
+    .dashboard-modal-header h2 {
+        font-size: 20px;
+    }
+
+
+    .dashboard-modal-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .dashboard-check-in-button,
+    .dashboard-close-button {
+        width: 100%;
+    }
+
 }

@@ -1,116 +1,118 @@
 import { useState } from "react";
 
-import {
-    CalendarDays,
-    Clock,
-    Stethoscope,
-    UserRound,
-    Phone,
-    HeartPulse,
-    FileText,
-    X
-} from "lucide-react";
-
 import { updateAppointment } from "../../api/appointmentApi";
 
-
-function formatTime(time) {
-
-    if (!time) {
-        return "";
-    }
-
-    const cleanTime =
-        String(time).slice(0, 5);
-
-    const [hours, minutes] =
-        cleanTime.split(":");
-
-    let hour =
-        Number(hours);
-
-    const suffix =
-        hour >= 12
-            ? "PM"
-            : "AM";
-
-    hour =
-        hour % 12 || 12;
-
-    return `${hour}:${minutes} ${suffix}`;
-}
+import "./dashboard.css";
 
 
-function formatDate(date) {
+export default function DashboardCharts({ data, onRefresh }) {
 
-    if (!date) {
-        return "";
-    }
+    const [selectedAppointment, setSelectedAppointment] = useState(null);
 
-    return new Date(date).toLocaleDateString(
-        "en-US",
-        {
-            weekday: "long",
+    const [actionLoading, setActionLoading] = useState(false);
+
+    const [error, setError] = useState("");
+
+
+    /*
+    =========================================================
+    FORMAT TIME
+    =========================================================
+    */
+
+    const formatTime = (time) => {
+
+        if (!time) {
+            return "N/A";
+        }
+
+        const [hours, minutes] = time.split(":");
+
+        const date = new Date();
+
+        date.setHours(
+            Number(hours),
+            Number(minutes),
+            0,
+            0
+        );
+
+        return date.toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit"
+        });
+
+    };
+
+
+    /*
+    =========================================================
+    FORMAT DATE
+    =========================================================
+    */
+
+    const formatDate = (date) => {
+
+        if (!date) {
+            return "N/A";
+        }
+
+        const value = new Date(date);
+
+        if (Number.isNaN(value.getTime())) {
+            return date;
+        }
+
+        return value.toLocaleDateString([], {
             year: "numeric",
             month: "long",
             day: "numeric"
-        }
-    );
-}
+        });
+
+    };
 
 
-export default function DashboardCharts({
-    data,
-    onRefresh
-}) {
+    /*
+    =========================================================
+    OPEN APPOINTMENT
+    =========================================================
+    */
 
-    const [selectedAppointment, setSelectedAppointment] =
-        useState(null);
-
-    const [actionLoading, setActionLoading] =
-        useState(false);
-
-    const [error, setError] =
-        useState("");
-
-
-    // =========================================================
-    // OPEN APPOINTMENT
-    // =========================================================
-
-    function handleAppointmentClick(appointment) {
+    const openAppointment = (appointment) => {
 
         setError("");
 
-        setSelectedAppointment(
-            appointment
-        );
+        setSelectedAppointment(appointment);
 
-    }
+    };
 
 
-    // =========================================================
-    // CLOSE MODAL
-    // =========================================================
+    /*
+    =========================================================
+    CLOSE MODAL
+    =========================================================
+    */
 
-    function closeAppointment() {
+    const closeAppointment = () => {
 
         if (actionLoading) {
             return;
         }
 
-        setSelectedAppointment(
-            null
-        );
+        setSelectedAppointment(null);
 
-    }
+        setError("");
+
+    };
 
 
-    // =========================================================
-    // CHECK IN PATIENT
-    // =========================================================
+    /*
+    =========================================================
+    CHECK IN PATIENT
+    =========================================================
+    */
 
-    async function handleCheckIn() {
+    const handleCheckIn = async () => {
 
         if (!selectedAppointment?.id) {
             return;
@@ -119,7 +121,9 @@ export default function DashboardCharts({
         try {
 
             setActionLoading(true);
+
             setError("");
+
 
             await updateAppointment(
                 selectedAppointment.id,
@@ -129,17 +133,19 @@ export default function DashboardCharts({
             );
 
 
-            // Update modal immediately
+            /*
+            Update modal immediately
+            */
 
-            setSelectedAppointment(
-                previous => ({
-                    ...previous,
-                    status: "Checked-In"
-                })
-            );
+            setSelectedAppointment((previous) => ({
+                ...previous,
+                status: "Checked-In"
+            }));
 
 
-            // Reload dashboard data
+            /*
+            Refresh dashboard data
+            */
 
             if (onRefresh) {
                 await onRefresh();
@@ -153,11 +159,12 @@ export default function DashboardCharts({
                 err
             );
 
+
             setError(
                 err?.response?.data?.message ||
-                err?.response?.data?.error ||
                 "Unable to check in patient."
             );
+
 
         } finally {
 
@@ -165,341 +172,350 @@ export default function DashboardCharts({
 
         }
 
-    }
+    };
 
+
+    /*
+    =========================================================
+    REGULAR APPOINTMENTS
+    =========================================================
+    */
 
     const todayAppointments =
         data?.todayAppointmentsList || [];
 
 
+    /*
+    =========================================================
+    BLOOD WORK APPOINTMENTS
+    =========================================================
+    */
+
     const bloodWorkAppointments =
         data?.bloodWorkAppointments || [];
 
 
-    const recentPatients =
-        data?.recentPatients || [];
-
+    /*
+    =========================================================
+    RENDER
+    =========================================================
+    */
 
     return (
 
-        <div className="dashboard-content">
+        <>
+
+            <div className="dashboard-content">
 
 
-            {/* =================================================
-                TODAY'S APPOINTMENTS
-            ================================================= */}
+                {/* =================================================
+                    TODAY'S APPOINTMENTS
+                    ================================================= */}
 
-            <section className="dashboard-section">
+                <div className="dashboard-section">
 
-                <div className="section-header">
+                    <div className="dashboard-section-header">
 
-                    <h2>
-                        Today's Appointments
-                    </h2>
+                        <div>
+                            <h2>
+                                Today's Appointments
+                            </h2>
 
-                    <span>
-                        {data?.todayAppointments || 0}
-                    </span>
-
-                </div>
-
-
-                {todayAppointments.length === 0 ? (
-
-                    <div className="empty-state">
-
-                        <div className="empty-icon">
-                            📅
+                            <p>
+                                Patients scheduled for today
+                            </p>
                         </div>
 
-                        <h3>
-                            No appointments today
-                        </h3>
-
-                        <p>
-                            There are no regular appointments
-                            scheduled for today.
-                        </p>
+                        <span className="dashboard-section-count">
+                            {todayAppointments.length}
+                        </span>
 
                     </div>
 
-                ) : (
 
-                    <div className="appointment-list">
+                    <div className="dashboard-appointments-list">
 
-                        {todayAppointments.map(
-                            appointment => (
+                        {todayAppointments.length > 0 ? (
 
-                                <button
-                                    type="button"
-                                    className="appointment-row dashboard-appointment-clickable"
-                                    key={appointment.id}
-                                    onClick={() =>
-                                        handleAppointmentClick(
-                                            appointment
-                                        )
-                                    }
-                                >
+                            todayAppointments.map(
+                                (appointment) => (
 
-                                    <div className="appointment-time">
-
-                                        {formatTime(
-                                            appointment.start_time
-                                        )}
-
-                                    </div>
-
-
-                                    <div className="appointment-info">
-
-                                        <strong>
-
-                                            {
-                                                appointment.patient_first_name
-                                            }
-
-                                            {" "}
-
-                                            {
-                                                appointment.patient_last_name
-                                            }
-
-                                        </strong>
-
-                                        <span>
-                                            {appointment.title}
-                                        </span>
-
-                                    </div>
-
-
-                                    <div className="appointment-provider">
-
-                                        Dr.{" "}
-
-                                        {
-                                            appointment.provider_first_name
+                                    <button
+                                        key={appointment.id}
+                                        type="button"
+                                        className="dashboard-appointment-clickable"
+                                        onClick={() =>
+                                            openAppointment(
+                                                appointment
+                                            )
                                         }
+                                    >
 
-                                        {" "}
-
-                                        {
-                                            appointment.provider_last_name
-                                        }
-
-                                    </div>
+                                        <div className="appointment-row">
 
 
-                                    <div className="appointment-status">
+                                            <div className="appointment-time">
 
-                                        {appointment.status}
+                                                {formatTime(
+                                                    appointment.start_time
+                                                )}
 
-                                    </div>
+                                            </div>
 
-                                </button>
 
+                                            <div className="appointment-info">
+
+                                                <strong>
+
+                                                    {appointment.patient_first_name}{" "}
+
+                                                    {appointment.patient_last_name}
+
+                                                </strong>
+
+
+                                                <span>
+
+                                                    {appointment.title ||
+                                                        "Appointment"}
+
+                                                </span>
+
+                                            </div>
+
+
+                                            <div className="appointment-provider">
+
+                                                {appointment.provider_first_name
+                                                    ? `${appointment.provider_first_name} ${appointment.provider_last_name || ""}`
+                                                    : "No Provider"}
+
+                                            </div>
+
+
+                                        </div>
+
+                                    </button>
+
+                                )
                             )
-                        )}
 
-                    </div>
+                        ) : (
 
-                )}
+                            <div className="dashboard-empty-state">
 
-            </section>
-
-
-            {/* =================================================
-                RECENT PATIENTS
-            ================================================= */}
-
-            <section className="dashboard-section">
-
-                <div className="section-header">
-
-                    <h2>
-                        Recent Patients
-                    </h2>
-
-                </div>
-
-
-                <div className="patient-list">
-
-                    {recentPatients.map(
-                        patient => (
-
-                            <div
-                                className="patient-row"
-                                key={patient.id}
-                            >
-
-                                <div className="patient-avatar">
-
-                                    {patient.first_name
-                                        ?.charAt(0)}
-
-                                    {patient.last_name
-                                        ?.charAt(0)}
-
-                                </div>
-
-
-                                <div className="patient-info">
-
-                                    <strong>
-
-                                        {patient.first_name}
-
-                                        {" "}
-
-                                        {patient.last_name}
-
-                                    </strong>
-
-                                    <span>
-
-                                        {patient.phone}
-
-                                    </span>
-
-                                </div>
+                                No appointments scheduled for today.
 
                             </div>
 
-                        )
-                    )}
-
-                </div>
-
-            </section>
-
-
-            {/* =================================================
-                BLOOD WORK APPOINTMENTS
-            ================================================= */}
-
-            <section className="dashboard-section">
-
-                <div className="section-header">
-
-                    <h2>
-                        Blood Work Appointments
-                    </h2>
-
-                    <span>
-                        {bloodWorkAppointments.length}
-                    </span>
-
-                </div>
-
-
-                {bloodWorkAppointments.length === 0 ? (
-
-                    <div className="empty-state">
-
-                        <div className="empty-icon">
-                            🩸
-                        </div>
-
-                        <h3>
-                            No blood work appointments
-                        </h3>
-
-                        <p>
-                            There are no blood work appointments
-                            scheduled for today.
-                        </p>
-
-                    </div>
-
-                ) : (
-
-                    <div className="appointment-list">
-
-                        {bloodWorkAppointments.map(
-                            appointment => (
-
-                                <button
-                                    type="button"
-                                    className="appointment-row dashboard-appointment-clickable"
-                                    key={appointment.id}
-                                    onClick={() =>
-                                        handleAppointmentClick(
-                                            appointment
-                                        )
-                                    }
-                                >
-
-                                    <div className="appointment-time">
-
-                                        {formatTime(
-                                            appointment.start_time
-                                        )}
-
-                                    </div>
-
-
-                                    <div className="appointment-info">
-
-                                        <strong>
-
-                                            {
-                                                appointment.patient_first_name
-                                            }
-
-                                            {" "}
-
-                                            {
-                                                appointment.patient_last_name
-                                            }
-
-                                        </strong>
-
-                                        <span>
-                                            🩸 Blood Work
-                                        </span>
-
-                                    </div>
-
-
-                                    <div className="appointment-provider">
-
-                                        Dr.{" "}
-
-                                        {
-                                            appointment.provider_first_name
-                                        }
-
-                                        {" "}
-
-                                        {
-                                            appointment.provider_last_name
-                                        }
-
-                                    </div>
-
-
-                                    <div className="appointment-status">
-
-                                        {appointment.status}
-
-                                    </div>
-
-                                </button>
-
-                            )
                         )}
 
                     </div>
 
-                )}
-
-            </section>
+                </div>
 
 
-            {/* =================================================
-                APPOINTMENT DETAILS MODAL
-            ================================================= */}
+
+                {/* =================================================
+                    RECENT PATIENTS
+                    ================================================= */}
+
+                <div className="dashboard-section">
+
+                    <div className="dashboard-section-header">
+
+                        <div>
+                            <h2>
+                                Recent Patients
+                            </h2>
+
+                            <p>
+                                Recently registered patients
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div className="dashboard-patients-list">
+
+                        {data?.recentPatients?.length > 0 ? (
+
+                            data.recentPatients.map(
+                                (patient) => (
+
+                                    <div
+                                        key={patient.id}
+                                        className="dashboard-patient-row"
+                                    >
+
+                                        <div className="dashboard-patient-avatar">
+
+                                            {patient.first_name
+                                                ?.charAt(0)
+                                                ?.toUpperCase()}
+
+                                        </div>
+
+
+                                        <div className="dashboard-patient-info">
+
+                                            <strong>
+
+                                                {patient.first_name}{" "}
+
+                                                {patient.last_name}
+
+                                            </strong>
+
+
+                                            <span>
+
+                                                {patient.phone ||
+                                                    "No phone number"}
+
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                )
+                            )
+
+                        ) : (
+
+                            <div className="dashboard-empty-state">
+
+                                No recent patients.
+
+                            </div>
+
+                        )}
+
+                    </div>
+
+                </div>
+
+
+
+                {/* =================================================
+                    BLOOD WORK APPOINTMENTS
+                    ================================================= */}
+
+                <div className="dashboard-section blood-work-section">
+
+                    <div className="dashboard-section-header">
+
+                        <div>
+
+                            <h2>
+                                🩸 Blood Work Appointments
+                            </h2>
+
+                            <p>
+                                Patients scheduled for blood work today
+                            </p>
+
+                        </div>
+
+
+                        <span className="dashboard-section-count">
+
+                            {bloodWorkAppointments.length}
+
+                        </span>
+
+                    </div>
+
+
+                    <div className="dashboard-appointments-list">
+
+                        {bloodWorkAppointments.length > 0 ? (
+
+                            bloodWorkAppointments.map(
+                                (appointment) => (
+
+                                    <button
+                                        key={appointment.id}
+                                        type="button"
+                                        className="dashboard-appointment-clickable blood-work-appointment"
+                                        onClick={() =>
+                                            openAppointment(
+                                                appointment
+                                            )
+                                        }
+                                    >
+
+                                        <div className="appointment-row">
+
+
+                                            <div className="appointment-time">
+
+                                                {formatTime(
+                                                    appointment.start_time
+                                                )}
+
+                                            </div>
+
+
+                                            <div className="appointment-info">
+
+                                                <strong>
+
+                                                    {appointment.patient_first_name}{" "}
+
+                                                    {appointment.patient_last_name}
+
+                                                </strong>
+
+
+                                                <span>
+
+                                                    🩸 Blood Work
+
+                                                </span>
+
+                                            </div>
+
+
+                                            <div className="appointment-provider">
+
+                                                {appointment.provider_first_name
+                                                    ? `${appointment.provider_first_name} ${appointment.provider_last_name || ""}`
+                                                    : "No Provider"}
+
+                                            </div>
+
+
+                                        </div>
+
+                                    </button>
+
+                                )
+                            )
+
+                        ) : (
+
+                            <div className="dashboard-empty-state">
+
+                                No blood work appointments today.
+
+                            </div>
+
+                        )}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            {/* =====================================================
+                APPOINTMENT / PATIENT DETAILS MODAL
+                ===================================================== */}
 
             {selectedAppointment && (
 
@@ -510,25 +526,35 @@ export default function DashboardCharts({
 
                     <div
                         className="dashboard-appointment-modal"
-                        onClick={event =>
+                        onClick={(event) =>
                             event.stopPropagation()
                         }
                     >
 
-                        {/* HEADER */}
+
+                        {/* =================================================
+                            HEADER
+                            ================================================= */}
 
                         <div className="dashboard-modal-header">
 
                             <div>
 
-                                <span className="modal-eyebrow">
-                                    APPOINTMENT DETAILS
-                                </span>
-
                                 <h2>
+
                                     {selectedAppointment.patient_first_name}{" "}
+
                                     {selectedAppointment.patient_last_name}
+
                                 </h2>
+
+
+                                <p>
+
+                                    {selectedAppointment.title ||
+                                        "Appointment"}
+
+                                </p>
 
                             </div>
 
@@ -537,390 +563,354 @@ export default function DashboardCharts({
                                 type="button"
                                 className="dashboard-modal-close"
                                 onClick={closeAppointment}
+                                disabled={actionLoading}
                             >
-
-                                <X size={20} />
-
+                                ×
                             </button>
 
                         </div>
 
 
-                        {/* STATUS */}
+
+                        {/* =================================================
+                            STATUS
+                            ================================================= */}
 
                         <div className="dashboard-modal-status">
 
-                            <span
-                                className={`appointment-status-badge ${
-                                    selectedAppointment.status
-                                        ?.toLowerCase()
-                                        .replace(
-                                            /\s+/g,
-                                            "-"
-                                        )
-                                }`}
-                            >
-                                {selectedAppointment.status}
+                            <strong>
+                                Status:
+                            </strong>{" "}
+
+                            <span>
+                                {selectedAppointment.status ||
+                                    "Scheduled"}
                             </span>
 
                         </div>
 
 
-                        {/* APPOINTMENT */}
+
+                        {/* =================================================
+                            APPOINTMENT DETAILS
+                            ================================================= */}
 
                         <div className="dashboard-detail-grid">
 
+
                             <div className="dashboard-detail">
 
-                                <CalendarDays size={17} />
+                                <label>
+                                    Appointment Type
+                                </label>
 
-                                <div>
+                                <span>
 
-                                    <strong>
-                                        Date
-                                    </strong>
+                                    {selectedAppointment.title ||
+                                        "Appointment"}
 
-                                    <p>
-                                        {formatDate(
-                                            selectedAppointment.appointment_date
-                                        )}
-                                    </p>
-
-                                </div>
+                                </span>
 
                             </div>
 
 
                             <div className="dashboard-detail">
 
-                                <Clock size={17} />
+                                <label>
+                                    Date
+                                </label>
 
-                                <div>
+                                <span>
 
-                                    <strong>
-                                        Time
-                                    </strong>
+                                    {formatDate(
+                                        selectedAppointment.appointment_date
+                                    )}
 
-                                    <p>
-
-                                        {formatTime(
-                                            selectedAppointment.start_time
-                                        )}
-
-                                        {" – "}
-
-                                        {formatTime(
-                                            selectedAppointment.end_time
-                                        )}
-
-                                    </p>
-
-                                </div>
+                                </span>
 
                             </div>
 
 
                             <div className="dashboard-detail">
 
-                                <FileText size={17} />
+                                <label>
+                                    Time
+                                </label>
 
-                                <div>
+                                <span>
 
-                                    <strong>
-                                        Appointment Type
-                                    </strong>
+                                    {formatTime(
+                                        selectedAppointment.start_time
+                                    )}
 
-                                    <p>
-                                        {selectedAppointment.title}
-                                    </p>
+                                    {" - "}
 
-                                </div>
+                                    {formatTime(
+                                        selectedAppointment.end_time
+                                    )}
+
+                                </span>
 
                             </div>
 
 
                             <div className="dashboard-detail">
 
-                                <Stethoscope size={17} />
+                                <label>
+                                    Provider
+                                </label>
 
-                                <div>
+                                <span>
 
-                                    <strong>
-                                        Provider
-                                    </strong>
+                                    {selectedAppointment.provider_first_name
+                                        ? `${selectedAppointment.provider_first_name} ${selectedAppointment.provider_last_name || ""}`
+                                        : "No Provider"}
 
-                                    <p>
-
-                                        Dr.{" "}
-
-                                        {
-                                            selectedAppointment.provider_first_name
-                                        }
-
-                                        {" "}
-
-                                        {
-                                            selectedAppointment.provider_last_name
-                                        }
-
-                                    </p>
-
-                                </div>
+                                </span>
 
                             </div>
+
 
                         </div>
 
 
-                        {/* PATIENT INFORMATION */}
+
+                        {/* =================================================
+                            PATIENT INFORMATION
+                            ================================================= */}
 
                         <div className="dashboard-patient-section">
 
                             <h3>
-                                <UserRound size={18} />
                                 Patient Information
                             </h3>
 
 
                             <div className="dashboard-patient-grid">
 
+
                                 <div>
 
+                                    <label>
+                                        First Name
+                                    </label>
+
                                     <span>
-                                        Full Name
+
+                                        {selectedAppointment.patient_first_name ||
+                                            "N/A"}
+
                                     </span>
-
-                                    <strong>
-
-                                        {
-                                            selectedAppointment.patient_first_name
-                                        }
-
-                                        {" "}
-
-                                        {
-                                            selectedAppointment.patient_last_name
-                                        }
-
-                                    </strong>
 
                                 </div>
 
 
                                 <div>
 
+                                    <label>
+                                        Last Name
+                                    </label>
+
                                     <span>
+
+                                        {selectedAppointment.patient_last_name ||
+                                            "N/A"}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div>
+
+                                    <label>
                                         Date of Birth
+                                    </label>
+
+                                    <span>
+
+                                        {selectedAppointment.date_of_birth
+                                            ? selectedAppointment.date_of_birth.slice(
+                                                  0,
+                                                  10
+                                              )
+                                            : "N/A"}
+
                                     </span>
-
-                                    <strong>
-
-                                        {
-                                            selectedAppointment.date_of_birth
-                                                ?.slice(0, 10) ||
-                                            "Not provided"
-                                        }
-
-                                    </strong>
 
                                 </div>
 
 
                                 <div>
 
-                                    <span>
+                                    <label>
                                         Health Card
+                                    </label>
+
+                                    <span>
+
+                                        {selectedAppointment.health_card ||
+                                            "N/A"}
+
                                     </span>
-
-                                    <strong>
-
-                                        {
-                                            selectedAppointment.health_card ||
-                                            "Not provided"
-                                        }
-
-                                    </strong>
 
                                 </div>
 
 
                                 <div>
 
-                                    <span>
+                                    <label>
                                         Phone
+                                    </label>
+
+                                    <span>
+
+                                        {selectedAppointment.phone ||
+                                            "N/A"}
+
                                     </span>
-
-                                    <strong>
-
-                                        <Phone
-                                            size={14}
-                                        />
-
-                                        {
-                                            selectedAppointment.phone ||
-                                            "Not provided"
-                                        }
-
-                                    </strong>
 
                                 </div>
 
 
                                 <div>
 
-                                    <span>
+                                    <label>
                                         Emergency Contact
+                                    </label>
+
+                                    <span>
+
+                                        {selectedAppointment.emergency_contact ||
+                                            "N/A"}
+
                                     </span>
 
-                                    <strong>
-
-                                        {
-                                            selectedAppointment.emergency_contact ||
-                                            "Not provided"
-                                        }
-
-                                    </strong>
-
                                 </div>
+
 
                             </div>
 
                         </div>
 
 
-                        {/* MEDICAL INFORMATION */}
 
-                        <div className="dashboard-patient-section">
+                        {/* =================================================
+                            MEDICAL INFORMATION
+                            ================================================= */}
+
+                        <div className="dashboard-medical-info">
 
                             <h3>
-                                <HeartPulse size={18} />
                                 Medical Information
                             </h3>
 
 
-                            <div className="dashboard-medical-info">
+                            <div>
 
-                                <div>
+                                <label>
+                                    Medications
+                                </label>
 
-                                    <span>
-                                        Medications
-                                    </span>
+                                <p>
 
-                                    <p>
+                                    {selectedAppointment.medications ||
+                                        "None provided"}
 
-                                        {
-                                            selectedAppointment.medications ||
-                                            "No medications recorded."
-                                        }
-
-                                    </p>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        Medical History
-                                    </span>
-
-                                    <p>
-
-                                        {
-                                            selectedAppointment.medical_history ||
-                                            "No medical history recorded."
-                                        }
-
-                                    </p>
-
-                                </div>
+                                </p>
 
                             </div>
+
+
+                            <div>
+
+                                <label>
+                                    Medical History
+                                </label>
+
+                                <p>
+
+                                    {selectedAppointment.medical_history ||
+                                        "None provided"}
+
+                                </p>
+
+                            </div>
+
+
+                            <div>
+
+                                <label>
+                                    Reason
+                                </label>
+
+                                <p>
+
+                                    {selectedAppointment.reason ||
+                                        selectedAppointment.title ||
+                                        "Blood Work"}
+
+                                </p>
+
+                            </div>
+
+
+                            <div>
+
+                                <label>
+                                    Notes
+                                </label>
+
+                                <p>
+
+                                    {selectedAppointment.notes ||
+                                        "No notes"}
+
+                                </p>
+
+                            </div>
+
 
                         </div>
 
 
-                        {/* REASON / NOTES */}
 
-                        <div className="dashboard-patient-section">
-
-                            <h3>
-                                <FileText size={18} />
-                                Appointment Information
-                            </h3>
-
-
-                            <div className="dashboard-medical-info">
-
-                                <div>
-
-                                    <span>
-                                        Reason
-                                    </span>
-
-                                    <p>
-
-                                        {
-                                            selectedAppointment.reason ||
-                                            "No reason recorded."
-                                        }
-
-                                    </p>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        Notes
-                                    </span>
-
-                                    <p>
-
-                                        {
-                                            selectedAppointment.notes ||
-                                            "No notes recorded."
-                                        }
-
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        {/* ERROR */}
+                        {/* =================================================
+                            ERROR
+                            ================================================= */}
 
                         {error && (
 
                             <div className="dashboard-modal-error">
+
                                 {error}
+
                             </div>
 
                         )}
 
 
-                        {/* ACTIONS */}
+
+                        {/* =================================================
+                            ACTIONS
+                            ================================================= */}
 
                         <div className="dashboard-modal-actions">
+
 
                             {selectedAppointment.status !==
                                 "Checked-In" && (
 
                                 <button
                                     type="button"
-                                    className="check-in-button"
+                                    className="dashboard-check-in-button"
                                     onClick={handleCheckIn}
                                     disabled={actionLoading}
                                 >
 
                                     {actionLoading
                                         ? "Checking In..."
-                                        : "Check In Patient"
-                                    }
+                                        : "✓ Check In Patient"}
 
                                 </button>
 
@@ -945,10 +935,14 @@ export default function DashboardCharts({
                                 onClick={closeAppointment}
                                 disabled={actionLoading}
                             >
+
                                 Close
+
                             </button>
 
+
                         </div>
+
 
                     </div>
 
@@ -956,7 +950,7 @@ export default function DashboardCharts({
 
             )}
 
-        </div>
+        </>
 
     );
 

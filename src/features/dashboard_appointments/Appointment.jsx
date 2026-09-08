@@ -79,6 +79,7 @@ const DEFAULT_BUSINESS_HOURS = [
     }
 ];
 
+
 const EMPTY_APPOINTMENT = {
     patient_id: "",
     patient_first_name: "",
@@ -194,6 +195,71 @@ function formatTime(time) {
         hour % 12 || 12;
 
     return `${hour}:${String(minute).padStart(2, "0")} ${suffix}`;
+}
+
+
+/* =========================================================
+   APPOINTMENT TYPE HELPERS
+========================================================= */
+
+/*
+ * Blood Work is treated as a separate resource from
+ * regular doctor appointments.
+ *
+ * Example:
+ *
+ * Doctor appointment
+ *     -> Doctor resource
+ *
+ * Blood Work
+ *     -> RN resource
+ */
+function isBloodWorkAppointment(appointment) {
+
+    const title =
+        appointment?.title ||
+        appointment?.appointment_type ||
+        "";
+
+    return (
+        String(title)
+            .trim()
+            .toLowerCase() === "blood work"
+    );
+}
+
+
+/*
+ * Two appointments conflict only when:
+ *
+ * 1. Same date
+ * 2. Same provider/resource
+ * 3. Same appointment category
+ * 4. Times overlap
+ *
+ * Blood Work + Doctor appointment
+ * does NOT conflict.
+ */
+function appointmentsOverlap(
+    firstStart,
+    firstEnd,
+    secondStart,
+    secondEnd
+) {
+
+    if (
+        !firstStart ||
+        !firstEnd ||
+        !secondStart ||
+        !secondEnd
+    ) {
+        return false;
+    }
+
+    return (
+        firstStart < secondEnd &&
+        firstEnd > secondStart
+    );
 }
 
 
@@ -412,7 +478,7 @@ export default function Appointment() {
     const [providers, setProviders] =
         useState([]);
 
-    const [selectedProviderId, setSelectedProviderId] = 
+    const [selectedProviderId, setSelectedProviderId] =
         useState("");
 
     const [appointmentSettings, setAppointmentSettings] =
@@ -437,7 +503,7 @@ export default function Appointment() {
 
     const [selectedAppointment, setSelectedAppointment] =
         useState(null);
-    
+
     const [showEditAppointment, setShowEditAppointment] =
         useState(false);
 
@@ -452,30 +518,27 @@ export default function Appointment() {
 
     const [showNewAppointment, setShowNewAppointment] =
         useState(false);
-    
+
     const [newAppointment, setNewAppointment] =
         useState(EMPTY_APPOINTMENT);
 
     const [actionLoading, setActionLoading] =
         useState(false);
 
+
+    /* =====================================================
+       SETTINGS
+    ===================================================== */
+
     const appointmentTitle =
         useMemo(() => {
-    
+
             return getAppointmentTitleFromSettings(
                 appointmentSettings
             );
-    
+
         }, [appointmentSettings]);
 
-    /* =====================================================
-       DEFAULT DURATION
-
-       IMPORTANT:
-       This is a TOP LEVEL useMemo.
-
-       Never put this inside another function.
-    ===================================================== */
 
     const defaultDuration =
         useMemo(() => {
@@ -487,25 +550,27 @@ export default function Appointment() {
         }, [appointmentSettings]);
 
 
-    const filteredAppointments = useMemo(() => {
+    /* =====================================================
+       FILTER APPOINTMENTS BY PROVIDER
+    ===================================================== */
+
+    const filteredAppointments =
+        useMemo(() => {
 
             if (!selectedProviderId) {
                 return appointments;
             }
-        
+
             return appointments.filter(
                 appointment =>
                     String(appointment.provider_id) ===
                     String(selectedProviderId)
             );
-        
-        }, [appointments, selectedProviderId]);
 
-    const calendarAppointments = useMemo(() => {
-
-            return filteredAppointments;
-        
-        }, [filteredAppointments]);
+        }, [
+            appointments,
+            selectedProviderId
+        ]);
 
 
     /* =====================================================
@@ -574,9 +639,6 @@ export default function Appointment() {
 
     /* =====================================================
        LOAD APPOINTMENTS
-
-       IMPORTANT:
-       Uses appointmentApi.js.
     ===================================================== */
 
     const loadAppointments =
@@ -674,11 +736,6 @@ export default function Appointment() {
                         err
                     );
 
-                    /*
-                     * Calendar can still work
-                     * using 30-minute default.
-                     */
-
                     setAppointmentSettings(
                         {}
                     );
@@ -719,11 +776,6 @@ export default function Appointment() {
                         "Business hours loading error:",
                         err
                     );
-
-                    /*
-                     * Business hours should not
-                     * destroy the calendar.
-                     */
 
                     setBusinessHours(
                         DEFAULT_BUSINESS_HOURS
@@ -827,27 +879,208 @@ export default function Appointment() {
 
         };
 
-    
-    const handleCalendarTimeSlotClick = ({
+
+    /* =====================================================
+       CHECK APPOINTMENT AVAILABILITY
+       
+       IMPORTANT:
+       Blood Work and Doctor appointments can overlap.
+
+       Same provider/resource cannot overlap.
+    ===================================================== */
+
+    function isAppointmentTimeAvailable({
+        appointmentId = null,
+        appointmentDate,
+        startTime,
+        endTime,
+        providerId,
+        title
+    }) {
+
+        if (
+            !appointmentDate ||
+            !startTime ||
+            !endTime ||
+            !providerId
+        ) {
+            return true;
+        }
+
+        const bookingIsBloodWork =
+            isBloodWorkAppointment({
+                title
+            });
+
+
+        const conflict =
+            appointments.find(
+                appointment => {
+
+                    /*
+                     * Do not compare the appointment
+                     * against itself during editing.
+                     */
+                    if (
+                        appointmentId &&
+                        Number(appointment.id) ===
+                        Number(appointmentId)
+                    ) {
+                        return false;
+                    }
+
+
+                    /*
+                     * Different date = no conflict.
+                     */
+                    const existingDate =
+                        String(
+                            appointment.appointment_date || ""
+                        ).slice(0, 10);
+
+                    const requestedDate =
+                        String(
+                            appointmentDate
+                        ).slice(0, 10);
+
+                    if (
+                        existingDate !==
+                        requestedDate
+                    ) {
+                        return false;
+                    }
+
+
+                    /*
+                     * Cancelled appointments do not
+                     * block the resource.
+                     */
+                    const status =
+                        String(
+                            appointment.status || ""
+                        )
+                            .trim()
+                            .toLowerCase();
+
+                    if (
+                        status === "cancelled" ||
+                        status === "canceled"
+                    ) {
+                        return false;
+                    }
+
+
+                    /*
+                     * Different provider/resource
+                     * means there is no conflict.
+                     */
+                    if (
+                        String(
+                            appointment.provider_id
+                        ) !==
+                        String(providerId)
+                    ) {
+                        return false;
+                    }
+
+
+                    /*
+                     * Determine whether existing
+                     * appointment is Blood Work.
+                     */
+                    const existingIsBloodWork =
+                        isBloodWorkAppointment(
+                            appointment
+                        );
+
+
+                    /*
+                     * Blood Work uses the RN resource.
+                     *
+                     * Regular appointment uses the
+                     * doctor resource.
+                     *
+                     * Therefore Blood Work + Doctor
+                     * can happen at the same time.
+                     */
+                    if (
+                        bookingIsBloodWork !==
+                        existingIsBloodWork
+                    ) {
+                        return false;
+                    }
+
+
+                    /*
+                     * Same resource and same
+                     * appointment category.
+                     *
+                     * Now check time overlap.
+                     */
+                    return appointmentsOverlap(
+                        startTime,
+                        endTime,
+                        String(
+                            appointment.start_time
+                        ).slice(0, 5),
+                        String(
+                            appointment.end_time
+                        ).slice(0, 5)
+                    );
+
+                }
+            );
+
+
+        return !conflict;
+    }
+
+
+    /* =====================================================
+       CALENDAR TIME SLOT CLICK
+    ===================================================== */
+
+    const handleCalendarTimeSlotClick =
+        ({
             date,
             startTime,
             endTime
         }) => {
-        
+
+            /*
+             * If a provider is selected in the
+             * calendar filter, automatically use
+             * that provider for the new appointment.
+             */
+            const providerId =
+                selectedProviderId || "";
+
+
             setNewAppointment({
                 ...EMPTY_APPOINTMENT,
 
-                title: appointmentTitle,
-        
-                appointment_date: date,
-        
-                start_time: startTime,
-        
-                end_time: endTime
+                title:
+                    appointmentTitle,
+
+                provider_id:
+                    providerId,
+
+                appointment_date:
+                    date,
+
+                start_time:
+                    startTime,
+
+                end_time:
+                    endTime
             });
-        
-            setShowNewAppointment(true);
+
+            setShowNewAppointment(
+                true
+            );
+
         };
+
 
     /* =====================================================
        WEEK NAVIGATION
@@ -931,169 +1164,162 @@ export default function Appointment() {
 
     }
 
+
+    /* =====================================================
+       EDIT APPOINTMENT
+    ===================================================== */
+
     function handleEditClick() {
 
         if (!selectedAppointment) {
             return;
         }
-    
+
         setEditAppointment({
-    
+
             patient_id:
                 selectedAppointment.patient_id || "",
-    
+
             patient_first_name:
                 selectedAppointment.patient_first_name || "",
-    
+
             patient_last_name:
                 selectedAppointment.patient_last_name || "",
-    
+
             date_of_birth:
                 selectedAppointment.date_of_birth?.slice(0, 10) || "",
-    
+
             health_card:
                 selectedAppointment.health_card || "",
-    
+
             phone:
                 selectedAppointment.phone || "",
-    
+
             emergency_contact:
                 selectedAppointment.emergency_contact || "",
-    
+
             medications:
                 selectedAppointment.medications || "",
-    
+
             medical_history:
                 selectedAppointment.medical_history || "",
-    
+
             provider_id:
                 selectedAppointment.provider_id || "",
-    
+
             title:
                 selectedAppointment.title || "",
-    
+
             appointment_date:
                 selectedAppointment.appointment_date?.slice(0, 10) || "",
-    
+
             start_time:
                 selectedAppointment.start_time?.slice(0, 5) || "",
-    
+
             end_time:
                 selectedAppointment.end_time?.slice(0, 5) || "",
-    
+
             reason:
                 selectedAppointment.reason || "",
-    
+
             notes:
                 selectedAppointment.notes || ""
+
         });
-    
-        setShowEditAppointment(true);
+
+        setShowEditAppointment(
+            true
+        );
     }
+
+
+    /* =====================================================
+       NOTES
+    ===================================================== */
 
     function handleNotesClick() {
 
         if (!selectedAppointment) {
             return;
         }
-    
+
         setAppointmentNotes(
             selectedAppointment.notes || ""
         );
-    
-        setShowNotesAppointment(true);
+
+        setShowNotesAppointment(
+            true
+        );
     }
+
 
     async function handleSaveNotes() {
 
         if (!selectedAppointment?.id) {
             return;
         }
-    
+
         try {
-    
+
             setActionLoading(true);
             setError("");
-    
+
             const notes =
                 appointmentNotes.trim();
-    
-            console.log(
-                "SAVING NOTES:",
+
+            await updateAppointment(
+                selectedAppointment.id,
                 {
-                    appointmentId:
-                        selectedAppointment.id,
-    
                     notes
                 }
             );
-    
-            const response =
-                await updateAppointment(
-                    selectedAppointment.id,
-                    {
-                        notes
-                    }
-                );
-    
-            console.log(
-                "NOTES SAVED:",
-                response
+
+            setAppointments(
+                previous =>
+                    previous.map(
+                        appointment =>
+                            appointment.id ===
+                            selectedAppointment.id
+                                ? {
+                                    ...appointment,
+                                    notes
+                                }
+                                : appointment
+                    )
             );
-    
-    
-            // Update calendar state immediately
-    
-            setAppointments(previous =>
-                previous.map(appointment =>
-                    appointment.id ===
-                    selectedAppointment.id
-                        ? {
-                            ...appointment,
-                            notes
-                        }
-                        : appointment
-                )
+
+            setSelectedAppointment(
+                previous => ({
+                    ...previous,
+                    notes
+                })
             );
-    
-    
-            // Update selected appointment
-    
-            setSelectedAppointment(previous => ({
-                ...previous,
-                notes
-            }));
-    
-    
-            // Close notes modal
-    
-            setShowNotesAppointment(false);
-    
+
+            setShowNotesAppointment(
+                false
+            );
+
         } catch (err) {
-    
+
             console.error(
                 "SAVE NOTES ERROR:",
                 err
             );
-    
-            console.error(
-                "BACKEND RESPONSE:",
-                err?.response?.data
-            );
-    
+
             setError(
                 err?.response?.data?.message ||
                 err?.response?.data?.error ||
                 "Unable to save appointment notes."
             );
-    
+
         } finally {
-    
+
             setActionLoading(false);
-    
+
         }
-    
+
     }
+
 
     /* =====================================================
        DELETE APPOINTMENT
@@ -1223,7 +1449,7 @@ export default function Appointment() {
 
 
     /* =====================================================
-    CREATE APPOINTMENT
+       CREATE APPOINTMENT
     ===================================================== */
 
     async function handleCreateAppointment() {
@@ -1233,11 +1459,10 @@ export default function Appointment() {
             setActionLoading(true);
             setError("");
 
-            /*
-            * Convert the AppointmentModal fields
-            * into the field names expected by
-            * the backend.
-            */
+
+            /* ---------------------------------------------
+               PREPARE DATA
+            --------------------------------------------- */
 
             const appointmentData = {
 
@@ -1298,9 +1523,9 @@ export default function Appointment() {
             );
 
 
-            /*
-            * Basic frontend validation
-            */
+            /* ---------------------------------------------
+               VALIDATION
+            --------------------------------------------- */
 
             if (!appointmentData.first_name) {
 
@@ -1326,6 +1551,16 @@ export default function Appointment() {
 
                 setError(
                     "Patient phone is required."
+                );
+
+                return;
+            }
+
+
+            if (!appointmentData.provider_id) {
+
+                setError(
+                    "Please select a provider."
                 );
 
                 return;
@@ -1362,9 +1597,51 @@ export default function Appointment() {
             }
 
 
-            /*
-            * Send to API
-            */
+            /* ---------------------------------------------
+               CHECK PROVIDER/RESOURCE AVAILABILITY
+            --------------------------------------------- */
+
+            const available =
+                isAppointmentTimeAvailable({
+
+                    appointmentDate:
+                        appointmentData.appointment_date,
+
+                    startTime:
+                        appointmentData.start_time,
+
+                    endTime:
+                        appointmentData.end_time,
+
+                    providerId:
+                        appointmentData.provider_id,
+
+                    title:
+                        appointmentData.title
+
+                });
+
+
+            if (!available) {
+
+                const bloodWork =
+                    isBloodWorkAppointment(
+                        appointmentData
+                    );
+
+                setError(
+                    bloodWork
+                        ? "This RN already has a Blood Work appointment during this time."
+                        : "This provider already has an appointment during this time."
+                );
+
+                return;
+            }
+
+
+            /* ---------------------------------------------
+               CREATE
+            --------------------------------------------- */
 
             const response =
                 await createAppointment(
@@ -1378,23 +1655,25 @@ export default function Appointment() {
             );
 
 
-            /*
-            * Reload calendar
-            */
+            /* ---------------------------------------------
+               RELOAD
+            --------------------------------------------- */
 
             await loadAppointments();
 
 
-            /*
-            * Close modal
-            */
+            /* ---------------------------------------------
+               CLOSE MODAL
+            --------------------------------------------- */
 
-            setShowNewAppointment(false);
+            setShowNewAppointment(
+                false
+            );
 
 
-            /*
-            * Reset form
-            */
+            /* ---------------------------------------------
+               RESET FORM
+            --------------------------------------------- */
 
             setNewAppointment({
                 ...EMPTY_APPOINTMENT
@@ -1427,160 +1706,253 @@ export default function Appointment() {
 
     }
 
-    async function handleUpdateAppointment(updatedAppointment) {
+
+    /* =====================================================
+       UPDATE APPOINTMENT
+    ===================================================== */
+
+    async function handleUpdateAppointment(
+        updatedAppointment
+    ) {
 
         if (!selectedAppointment?.id) {
             return;
         }
-    
+
         try {
-    
+
             setActionLoading(true);
             setError("");
-    
+
+
             const appointmentData = {
-    
+
                 first_name:
                     updatedAppointment.patient_first_name?.trim(),
-    
+
                 last_name:
                     updatedAppointment.patient_last_name?.trim(),
-    
+
                 date_of_birth:
                     updatedAppointment.date_of_birth || null,
-    
+
                 health_card:
                     updatedAppointment.health_card?.trim() || "",
-    
+
                 phone:
                     updatedAppointment.phone?.trim(),
-    
+
                 emergency_contact:
                     updatedAppointment.emergency_contact?.trim() || "",
-    
+
                 medications:
                     updatedAppointment.medications?.trim() || "",
-    
+
                 medical_history:
                     updatedAppointment.medical_history?.trim() || "",
-    
+
                 provider_id:
                     updatedAppointment.provider_id
-                        ? Number(updatedAppointment.provider_id)
+                        ? Number(
+                            updatedAppointment.provider_id
+                        )
                         : null,
-    
+
                 title:
                     updatedAppointment.title?.trim() || "",
-    
+
                 appointment_date:
                     updatedAppointment.appointment_date,
-    
+
                 start_time:
                     updatedAppointment.start_time,
-    
+
                 end_time:
                     updatedAppointment.end_time,
-    
+
                 reason:
                     updatedAppointment.reason?.trim() || "",
-    
+
                 notes:
                     updatedAppointment.notes?.trim() || ""
+
             };
-    
-    
+
+
             console.log(
                 "UPDATING APPOINTMENT:",
                 appointmentData
             );
-    
-    
-            // ========================================
-            // SAVE TO DATABASE
-            // ========================================
-    
+
+
+            /* ---------------------------------------------
+               VALIDATION
+            --------------------------------------------- */
+
+            if (!appointmentData.provider_id) {
+
+                setError(
+                    "Please select a provider."
+                );
+
+                return;
+            }
+
+
+            if (!appointmentData.appointment_date) {
+
+                setError(
+                    "Appointment date is required."
+                );
+
+                return;
+            }
+
+
+            if (!appointmentData.start_time) {
+
+                setError(
+                    "Appointment start time is required."
+                );
+
+                return;
+            }
+
+
+            if (!appointmentData.end_time) {
+
+                setError(
+                    "Appointment end time is required."
+                );
+
+                return;
+            }
+
+
+            /* ---------------------------------------------
+               CHECK AVAILABILITY
+               
+               IMPORTANT:
+               Excludes the appointment being edited.
+            --------------------------------------------- */
+
+            const available =
+                isAppointmentTimeAvailable({
+
+                    appointmentId:
+                        selectedAppointment.id,
+
+                    appointmentDate:
+                        appointmentData.appointment_date,
+
+                    startTime:
+                        appointmentData.start_time,
+
+                    endTime:
+                        appointmentData.end_time,
+
+                    providerId:
+                        appointmentData.provider_id,
+
+                    title:
+                        appointmentData.title
+
+                });
+
+
+            if (!available) {
+
+                const bloodWork =
+                    isBloodWorkAppointment(
+                        appointmentData
+                    );
+
+                setError(
+                    bloodWork
+                        ? "This RN already has a Blood Work appointment during this time."
+                        : "This provider already has an appointment during this time."
+                );
+
+                return;
+            }
+
+
+            /* ---------------------------------------------
+               SAVE
+            --------------------------------------------- */
+
             await updateAppointment(
                 selectedAppointment.id,
                 appointmentData
             );
-    
-    
-            // ========================================
-            // GET FRESH DATA FROM DATABASE
-            // ========================================
-    
+
+
+            /* ---------------------------------------------
+               GET FRESH DATA
+            --------------------------------------------- */
+
             const freshAppointments =
                 await loadAppointments();
-    
-    
-            // ========================================
-            // FIND THE UPDATED APPOINTMENT
-            // ========================================
-    
+
+
             const updated =
                 freshAppointments.find(
                     appointment =>
                         Number(appointment.id) ===
-                        Number(selectedAppointment.id)
+                        Number(
+                            selectedAppointment.id
+                        )
                 );
-    
-    
-            // ========================================
-            // UPDATE SELECTED APPOINTMENT
-            // ========================================
-    
+
+
             if (updated) {
-    
+
                 setSelectedAppointment(
                     updated
                 );
-    
+
             }
-    
-    
-            // ========================================
-            // CLOSE EDIT MODAL
-            // ========================================
-    
+
+
+            /* ---------------------------------------------
+               CLOSE EDIT MODAL
+            --------------------------------------------- */
+
             setShowEditAppointment(
                 false
             );
-    
-    
-            // ========================================
-            // RESET EDIT FORM
-            // ========================================
-    
+
+
             setEditAppointment({
                 ...EMPTY_APPOINTMENT
             });
-    
-    
+
+
         } catch (err) {
-    
+
             console.error(
                 "UPDATE APPOINTMENT ERROR:",
                 err
             );
-    
+
             console.error(
                 "BACKEND RESPONSE:",
                 err?.response?.data
             );
-    
+
             setError(
                 err?.response?.data?.message ||
                 err?.response?.data?.error ||
                 "Unable to update appointment."
             );
-    
-        } finally {
-    
-            setActionLoading(false);
-    
-        }
-    }
 
+        } finally {
+
+            setActionLoading(false);
+
+        }
+
+    }
 
 
     /* =====================================================
@@ -1763,11 +2135,14 @@ export default function Appointment() {
 
                         <select
                             id="provider-filter"
-                            value={selectedProviderId}
-                            onChange={event =>
-                                setSelectedProviderId(
-                                    event.target.value
-                                )
+                            value={
+                                selectedProviderId
+                            }
+                            onChange={
+                                event =>
+                                    setSelectedProviderId(
+                                        event.target.value
+                                    )
                             }
                         >
 
@@ -1775,16 +2150,28 @@ export default function Appointment() {
                                 All Providers
                             </option>
 
-                            {providers.map(provider => (
+                            {providers.map(
+                                provider => (
 
-                                <option
-                                    key={provider.id}
-                                    value={provider.id}
-                                >
-                                    Dr. {provider.first_name} {provider.last_name}
-                                </option>
+                                    <option
+                                        key={
+                                            provider.id
+                                        }
+                                        value={
+                                            provider.id
+                                        }
+                                    >
+                                        Dr.{" "}
+                                        {
+                                            provider.first_name
+                                        }{" "}
+                                        {
+                                            provider.last_name
+                                        }
+                                    </option>
 
-                            ))}
+                                )
+                            )}
 
                         </select>
 
@@ -1795,21 +2182,27 @@ export default function Appointment() {
 
                         <button
                             type="button"
-                            onClick={previousWeek}
+                            onClick={
+                                previousWeek
+                            }
                         >
                             ‹
                         </button>
 
                         <button
                             type="button"
-                            onClick={goToToday}
+                            onClick={
+                                goToToday
+                            }
                         >
                             Today
                         </button>
 
                         <button
                             type="button"
-                            onClick={nextWeek}
+                            onClick={
+                                nextWeek
+                            }
                         >
                             ›
                         </button>
@@ -1843,7 +2236,9 @@ export default function Appointment() {
                     onAppointmentClick={
                         handleAppointmentClick
                     }
-                    onTimeSlotClick={handleCalendarTimeSlotClick}
+                    onTimeSlotClick={
+                        handleCalendarTimeSlotClick
+                    }
                 />
 
             </div>
@@ -1999,6 +2394,7 @@ export default function Appointment() {
                                     </strong>
 
                                     <p>
+
                                         {formatTime(
                                             selectedAppointment.start_time
                                         )}
@@ -2008,6 +2404,7 @@ export default function Appointment() {
                                         {formatTime(
                                             selectedAppointment.end_time
                                         )}
+
                                     </p>
 
                                 </div>
@@ -2079,10 +2476,12 @@ export default function Appointment() {
                                 </strong>
 
                                 <p>
+
                                     {
                                         selectedAppointment.notes ||
                                         "No notes recorded."
                                     }
+
                                 </p>
 
                             </div>
@@ -2108,10 +2507,12 @@ export default function Appointment() {
                                             actionLoading
                                         }
                                     >
+
                                         {actionLoading
                                             ? "Processing..."
                                             : "Check In Patient"
                                         }
+
                                     </button>
 
                                 )
@@ -2121,8 +2522,12 @@ export default function Appointment() {
                             <button
                                 type="button"
                                 className="edit-appointment-button"
-                                onClick={handleEditClick}
-                                disabled={actionLoading}
+                                onClick={
+                                    handleEditClick
+                                }
+                                disabled={
+                                    actionLoading
+                                }
                             >
                                 Edit Appointment
                             </button>
@@ -2131,14 +2536,22 @@ export default function Appointment() {
                             <button
                                 type="button"
                                 className="notes-button"
-                                onClick={handleNotesClick}
-                                disabled={actionLoading}
-                            >
-                                {selectedAppointment.notes
-                                    ? "Edit Notes"
-                                    : "Add Notes"
+                                onClick={
+                                    handleNotesClick
                                 }
+                                disabled={
+                                    actionLoading
+                                }
+                            >
+
+                                {
+                                    selectedAppointment.notes
+                                        ? "Edit Notes"
+                                        : "Add Notes"
+                                }
+
                             </button>
+
 
                             <button
                                 type="button"
@@ -2160,7 +2573,8 @@ export default function Appointment() {
                 </div>
 
             )}
-            
+
+
             {/* =================================================
                 NEW APPOINTMENT MODAL
             ================================================= */}
@@ -2169,17 +2583,27 @@ export default function Appointment() {
 
                 <AppointmentModal
 
-                    appointment={newAppointment}
+                    appointment={
+                        newAppointment
+                    }
 
-                    setAppointment={setNewAppointment}
+                    setAppointment={
+                        setNewAppointment
+                    }
 
-                    providers={providers}
+                    providers={
+                        providers
+                    }
 
-                    defaultDuration={defaultDuration}
+                    defaultDuration={
+                        defaultDuration
+                    }
 
                     onClose={() => {
 
-                        setShowNewAppointment(false);
+                        setShowNewAppointment(
+                            false
+                        );
 
                         setNewAppointment(
                             EMPTY_APPOINTMENT
@@ -2187,140 +2611,208 @@ export default function Appointment() {
 
                     }}
 
-                    onSubmit={handleCreateAppointment}
+                    onSubmit={
+                        handleCreateAppointment
+                    }
 
-                    loading={actionLoading}
+                    loading={
+                        actionLoading
+                    }
 
                 />
 
             )}
+
 
             {/* =================================================
                 NOTES MODAL
             ================================================= */}
 
-            {showNotesAppointment && selectedAppointment && (
+            {showNotesAppointment &&
+                selectedAppointment && (
 
-            <div
-                className="appointment-modal-overlay"
-                onClick={() =>
-                    setShowNotesAppointment(false)
-                }
-            >
+                    <div
+                        className="appointment-modal-overlay"
+                        onClick={() =>
+                            setShowNotesAppointment(
+                                false
+                            )
+                        }
+                    >
 
-                <div
-                    className="appointment-notes-modal"
-                    onClick={event =>
-                        event.stopPropagation()
-                    }
-                >
+                        <div
+                            className="appointment-notes-modal"
+                            onClick={
+                                event =>
+                                    event.stopPropagation()
+                            }
+                        >
 
-                    <div className="appointment-notes-modal-header">
+                            <div className="appointment-notes-modal-header">
 
-                        <div>
+                                <div>
 
-                            <span className="modal-eyebrow">
-                                APPOINTMENT NOTES
-                            </span>
+                                    <span className="modal-eyebrow">
+                                        APPOINTMENT NOTES
+                                    </span>
 
-                            <h2>
-                                {selectedAppointment.patient_first_name}{" "}
-                                {selectedAppointment.patient_last_name}
-                            </h2>
+                                    <h2>
+
+                                        {
+                                            selectedAppointment.patient_first_name
+                                        }
+
+                                        {" "}
+
+                                        {
+                                            selectedAppointment.patient_last_name
+                                        }
+
+                                    </h2>
+
+                                </div>
+
+
+                                <button
+                                    type="button"
+                                    className="modal-close"
+                                    onClick={() =>
+                                        setShowNotesAppointment(
+                                            false
+                                        )
+                                    }
+                                >
+
+                                    <X size={20} />
+
+                                </button>
+
+                            </div>
+
+
+                            <div className="appointment-notes-form">
+
+                                <label htmlFor="appointment-notes">
+                                    Notes
+                                </label>
+
+                                <textarea
+                                    id="appointment-notes"
+                                    value={
+                                        appointmentNotes
+                                    }
+                                    onChange={
+                                        event =>
+                                            setAppointmentNotes(
+                                                event.target.value
+                                            )
+                                    }
+                                    placeholder="Enter appointment notes..."
+                                    rows={8}
+                                    autoFocus
+                                />
+
+                                <div className="notes-character-count">
+
+                                    {
+                                        appointmentNotes.length
+                                    }{" "}
+                                    characters
+
+                                </div>
+
+                            </div>
+
+
+                            <div className="appointment-notes-actions">
+
+                                <button
+                                    type="button"
+                                    className="notes-cancel-button"
+                                    onClick={() =>
+                                        setShowNotesAppointment(
+                                            false
+                                        )
+                                    }
+                                    disabled={
+                                        actionLoading
+                                    }
+                                >
+                                    Cancel
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    className="notes-save-button"
+                                    onClick={
+                                        handleSaveNotes
+                                    }
+                                    disabled={
+                                        actionLoading
+                                    }
+                                >
+
+                                    {actionLoading
+                                        ? "Saving..."
+                                        : "Save Notes"
+                                    }
+
+                                </button>
+
+                            </div>
 
                         </div>
 
-                        <button
-                            type="button"
-                            className="modal-close"
-                            onClick={() =>
-                                setShowNotesAppointment(false)
-                            }
-                        >
-                            <X size={20} />
-                        </button>
-
                     </div>
 
+                )}
 
-                    <div className="appointment-notes-form">
-
-                        <label htmlFor="appointment-notes">
-                            Notes
-                        </label>
-
-                        <textarea
-                            id="appointment-notes"
-                            value={appointmentNotes}
-                            onChange={event =>
-                                setAppointmentNotes(
-                                    event.target.value
-                                )
-                            }
-                            placeholder="Enter appointment notes..."
-                            rows={8}
-                            autoFocus
-                        />
-
-                        <div className="notes-character-count">
-                            {appointmentNotes.length} characters
-                        </div>
-
-                    </div>
-
-
-                    <div className="appointment-notes-actions">
-
-                        <button
-                            type="button"
-                            className="notes-cancel-button"
-                            onClick={() =>
-                                setShowNotesAppointment(false)
-                            }
-                            disabled={actionLoading}
-                        >
-                            Cancel
-                        </button>
-
-                        <button
-                            type="button"
-                            className="notes-save-button"
-                            onClick={handleSaveNotes}
-                            disabled={actionLoading}
-                        >
-                            {actionLoading
-                                ? "Saving..."
-                                : "Save Notes"
-                            }
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            )}
 
             {/* =================================================
                 EDIT APPOINTMENT MODAL
             ================================================= */}
 
-            {showEditAppointment && selectedAppointment && (
+            {showEditAppointment &&
+                selectedAppointment && (
 
-                <AppointmentModal
-                    appointment={editAppointment}
-                    setAppointment={setEditAppointment}
-                    providers={providers}
-                    defaultDuration={defaultDuration}
-                    onClose={() => {
-                        setShowEditAppointment(false);
-                    }}
-                    onSubmit={handleUpdateAppointment}
-                    loading={actionLoading}
-                />
+                    <AppointmentModal
 
-            )}
+                        appointment={
+                            editAppointment
+                        }
+
+                        setAppointment={
+                            setEditAppointment
+                        }
+
+                        providers={
+                            providers
+                        }
+
+                        defaultDuration={
+                            defaultDuration
+                        }
+
+                        onClose={() => {
+
+                            setShowEditAppointment(
+                                false
+                            );
+
+                        }}
+
+                        onSubmit={
+                            handleUpdateAppointment
+                        }
+
+                        loading={
+                            actionLoading
+                        }
+
+                    />
+
+                )}
 
         </div>
 
