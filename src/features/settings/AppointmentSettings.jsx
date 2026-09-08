@@ -866,6 +866,14 @@ export default function AppointmentSettings() {
                                 }
                             >
 
+                                <option value="5">
+                                    5 minutes
+                                </option>
+
+                                <option value="10">
+                                    10 minutes
+                                </option>
+
                                 <option value="15">
                                     15 minutes
                                 </option>
