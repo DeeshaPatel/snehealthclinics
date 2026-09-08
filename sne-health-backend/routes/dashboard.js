@@ -67,34 +67,40 @@ router.get("/", async (req, res) => {
 
         const appointmentsListResult = await pool.query(`
 
-            SELECT
+        SELECT
 
-                a.id,
-                a.title,
-                a.appointment_date,
-                a.start_time,
-                a.end_time,
-                a.status,
-                a.reason,
+            a.id,
+            a.title,
+            a.appointment_date,
+            a.start_time,
+            a.end_time,
+            a.status,
+            a.reason,
 
-                p.first_name AS patient_first_name,
-                p.last_name AS patient_last_name,
+            p.first_name AS patient_first_name,
+            p.last_name AS patient_last_name,
 
-                pr.first_name AS provider_first_name,
-                pr.last_name AS provider_last_name
+            pr.first_name AS provider_first_name,
+            pr.last_name AS provider_last_name
 
-            FROM appointments a
+        FROM appointments a
 
-            LEFT JOIN patients p
-                ON a.patient_id = p.id
+        LEFT JOIN patients p
+            ON a.patient_id = p.id
 
-            LEFT JOIN providers pr
-                ON a.provider_id = pr.id
+        LEFT JOIN providers pr
+            ON a.provider_id = pr.id
 
-            WHERE a.appointment_date =
-                COALESCE($1::date, CURRENT_DATE)
+        WHERE a.appointment_date =
+            COALESCE($1::date, CURRENT_DATE)
 
-            ORDER BY a.start_time ASC
+        AND NOT (
+            LOWER(TRIM(COALESCE(a.title, ''))) LIKE '%blood%'
+            OR
+            LOWER(TRIM(COALESCE(a.reason, ''))) LIKE '%blood%'
+        )
+
+        ORDER BY a.start_time ASC
 
         `, [selectedDate]);
 
