@@ -120,7 +120,7 @@ Professional healthcare you can trust.
 
 <img
 
-src="/images/clinic.jpg"
+src="../../../public/images/clinic.png"
 
 alt="SNE Health Clinic"
 

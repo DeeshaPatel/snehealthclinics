@@ -6,200 +6,145 @@ import {
     CalendarCheck
 } from "lucide-react";
 
+const team = [
+    {
+        name: "Dr. Airhumwunde, Osamagbe Walter",
+        role: "Medical Director",
+        credentials: "Family Physician",
+        description:
+            "Dr. Osamagbe Walter Airhumwunde leads SNE Health Clinic with a commitment to providing compassionate, accessible, and patient-centered healthcare for individuals and families.",
+        specialties: [
+            "Family Medicine",
+            "Preventive Care",
+            "Walk-in Clinic Services"
+        ]
+    },
+    {
+        name: "Dr. Pir Shah",
+        role: "Family Physician",
+        credentials: "Family Physician",
+        description:
+            "Dr. Pir Shah provides compassionate and patient-centered care to individuals and families. He speaks English, Punjabi, Urdu, and Hindi, helping patients feel comfortable and understood throughout their care.",
+        specialties: [
+            "Family Medicine"
+        ]
+    }
+];
 
-const team = {
+export default function Team() {
+    return (
+        <section className="team">
 
-    name:"Dr. Airhumwunde, Osamagbe Walter",
+            <div className="section-heading">
 
-    role:"Medical Director",
+                <h2>
+                    Meet Our Medical Team
+                </h2>
 
-    credentials:
-    "Family Physician",
+                <p>
+                    Experienced healthcare professionals dedicated to your wellness.
+                </p>
 
-    description:
-    "Dr. Osamagbe Walter Airhumwunde leads SNE Health Clinic with a commitment to providing compassionate, accessible, and patient-centered healthcare for individuals and families.",
+            </div>
 
+            <div className="doctor-profiles">
 
-    specialties:[
-        "Family Medicine",
-        "Preventive Care",
-        "Walk-in Clinic Services"
-    ]
+                {team.map((doctor) => (
 
-};
+                    <div
+                        className="doctor-profile"
+                        key={doctor.name}
+                    >
 
+                        {/* Avatar */}
+                        <div className="doctor-avatar">
 
+                            <span>
+                                Dr
+                            </span>
 
-export default function Team(){
+                        </div>
 
+                        <div className="doctor-info">
 
-return (
+                            <h3>
+                                {doctor.name}
+                            </h3>
 
-<section className="team">
+                            <h4>
+                                {doctor.role}
+                            </h4>
 
+                            <p className="credentials">
+                                {doctor.credentials}
+                            </p>
 
-<div className="section-heading">
+                            <p className="doctor-description">
+                                {doctor.description}
+                            </p>
 
+                            <div className="specialties">
 
-<h2>
-Meet Our Medical Director
-</h2>
+                                {doctor.specialties.map((item) => (
 
+                                    <div
+                                        key={item}
+                                        className="specialty"
+                                    >
 
-<p>
-Experienced healthcare leadership dedicated to your wellness.
-</p>
+                                        <Stethoscope size={18} />
 
+                                        {item}
 
-</div>
+                                    </div>
 
+                                ))}
 
+                            </div>
 
+                            <div className="doctor-highlights">
 
-<div className="doctor-profile">
+                                <div>
+                                    <HeartPulse />
 
+                                    <span>
+                                        Patient-Centered Care
+                                    </span>
+                                </div>
 
+                                <div>
+                                    <ShieldCheck />
 
-{/* Avatar */}
+                                    <span>
+                                        Trusted Healthcare
+                                    </span>
+                                </div>
 
-<div className="doctor-avatar">
+                                <div>
+                                    <CalendarCheck />
 
-<span>
-Dr
-</span>
+                                    <span>
+                                        Accepting Patients
+                                    </span>
+                                </div>
 
-</div>
+                            </div>
 
+                            <Link
+                                to="/book-appointment"
+                                className="doctor-button"
+                            >
+                                Book Appointment
+                            </Link>
 
+                        </div>
 
+                    </div>
 
-<div className="doctor-info">
+                ))}
 
+            </div>
 
-<h3>
-{team.name}
-</h3>
-
-
-<h4>
-{team.role}
-</h4>
-
-
-<p className="credentials">
-
-{team.credentials}
-
-</p>
-
-
-
-<p className="doctor-description">
-
-{team.description}
-
-</p>
-
-
-
-
-
-<div className="specialties">
-
-
-{
-team.specialties.map((item)=>(
-
-<div
-key={item}
-className="specialty"
->
-
-<Stethoscope size={18}/>
-
-{item}
-
-</div>
-
-))
-
-}
-
-
-</div>
-
-
-
-
-
-<div className="doctor-highlights">
-
-
-<div>
-
-<HeartPulse/>
-
-<span>
-Patient-Centered Care
-</span>
-
-</div>
-
-
-
-<div>
-
-<ShieldCheck/>
-
-<span>
-Trusted Healthcare
-</span>
-
-</div>
-
-
-
-<div>
-
-<CalendarCheck/>
-
-<span>
-Accepting Patients
-</span>
-
-</div>
-
-
-</div>
-
-
-
-
-
-<Link
-
-to="/book-appointment"
-
-className="doctor-button"
-
->
-
-Book Appointment
-
-</Link>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-</section>
-
-)
-
+        </section>
+    );
 }
