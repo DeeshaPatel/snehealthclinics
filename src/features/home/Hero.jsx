@@ -32,7 +32,7 @@ Family Doctor &
 
 <br/>
 
-Walk-in Clinic in 
+Walk-in Clinic in&nbsp; 
 
 <span>
  Hamilton
@@ -54,15 +54,12 @@ Book your appointment today or visit our walk-in clinic.
 
 <div className="hero-actions">
 
-
-<Link
-to="/book-appointment"
-className="hero-primary-btn"
+<a
+    href="https://patient.medeohealth.com/booking/sne-health-clinics"
+    className="hero-primary-btn"
 >
-
-Book Appointment
-
-</Link>
+    Book Appointment
+</a>
 
 
 

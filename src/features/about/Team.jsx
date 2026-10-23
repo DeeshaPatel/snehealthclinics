@@ -129,14 +129,13 @@ export default function Team() {
                                 </div>
 
                             </div>
-
-                            <Link
-                                to="/book-appointment"
+                            
+                            <a
+                                href="https://patient.medeohealth.com/booking/sne-health-clinics"
                                 className="doctor-button"
                             >
                                 Book Appointment
-                            </Link>
-
+                            </a>
                         </div>
 
                     </div>

@@ -32,18 +32,12 @@ step toward better health.
 
 <div className="cta-buttons">
 
-
-<Link
-to="/book-appointment"
-className="cta-primary"
+<a
+    href="https://patient.medeohealth.com/booking/sne-health-clinics"
+    className="cta-primary"
 >
-
-<CalendarCheck size={20}/>
-
-Book Appointment
-
-</Link>
-
+    Book Appointment
+</a>
 
 
 <a

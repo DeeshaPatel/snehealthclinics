@@ -139,11 +139,12 @@ Schedule an appointment with our healthcare team.
 </p>
 
 
-<Button>
-
-Book Appointment
-
-</Button>
+<a
+                                href="https://patient.medeohealth.com/booking/sne-health-clinics"
+                                className="doctor-button"
+                            >
+                                Book Appointment
+                            </a>
 
 
 </section>

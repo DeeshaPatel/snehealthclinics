@@ -295,17 +295,13 @@ Schedule your visit with our healthcare team today.
 
 
 
-<Link
-
-to="/book-appointment"
-
+<a
+                                href="https://patient.medeohealth.com/booking/sne-health-clinics"
+                                className="doctor-button"
 >
-
 <CalendarCheck size={20}/>
-
-Book Appointment
-
-</Link>
+                                Book Appointment
+                            </a>
 
 
 

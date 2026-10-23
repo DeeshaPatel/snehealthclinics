@@ -148,20 +148,12 @@ isActive
 }
 
 
-
-<NavLink
-
-to="/book-appointment"
-
-className="navbar-button"
-
-onClick={()=>setOpen(false)}
-
+<a
+    href="https://patient.medeohealth.com/booking/sne-health-clinics"
+    className="navbar-button"
 >
-
-Book Appointment
-
-</NavLink>
+    Book Appointment
+</a>
 
 
 
