@@ -92,6 +92,11 @@ Monday - Friday
 9:00 AM - 6:00 PM
 </p>
 
+<p>
+Saturday
+<br/>
+9:00 AM - 3:00 PM
+</p>
 </div>
 
 
